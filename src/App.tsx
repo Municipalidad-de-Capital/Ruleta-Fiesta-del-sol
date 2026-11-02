@@ -68,7 +68,7 @@ const themes: Theme[] = [
       {
         question: '¿EN QUÉ PLAZA DE LA CIUDAD ENCUENTRA UBICADO EL MONOLITO DEL KM 0?',
         options: ['Plaza 25 de mayo', 'Plaza España', 'Plaza Laprida'],
-        correct: 1
+        correct: 0
       },
       {
         question: '¿CON QUÉ NOMBRE ES CONOCIDA POPULARMENTE LA PLAZA HIPÓLITO YRIGOYEN?',
@@ -125,7 +125,7 @@ const themes: Theme[] = [
       {
         question: '¿QUÉ FRUTO SECO ES DISTINTIVO DE SAN JUAN?',
         options: ['Pistacho', 'Avellana', 'Almendra'],
-        correct: 2
+        correct: 0
       },
       {
         question: 'ADEMÁS DE LA BODEGA HAGMANN ¿QUÉ OTRA BODEGA CAPITALINA FORMA PARTE DE LA RUTA DEL VINO DE SAN JUAN?',
@@ -151,7 +151,7 @@ const themes: Theme[] = [
       {
         question: '¿DÓNDE SE UBICA EL NUEVO MUSEO PALEONTOLÓGICO DE SAN JUAN?',
         options: ['Parque de Mayo', 'Plaza del Bicentenario', 'Parque Belgrano'],
-        correct: 1
+        correct: 2
       },
       {
         question: '¿EN QUÉ PERÍODO DE LA ERA SECUNDARIA SE ENFOCA PRINCIPALMENTE EL MUSEO PALEONTOLÓGICO DE LA PROVINCIA?',
