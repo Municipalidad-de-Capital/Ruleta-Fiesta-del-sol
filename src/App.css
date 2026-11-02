@@ -27,13 +27,13 @@ body {
 }
 
 .header h1 {
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 5vh, 3.5rem);
   margin-bottom: 10px;
   font-weight: 700;
 }
 
 .header p {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.5vh, 1.5rem);
   opacity: 0.9;
 }
 
@@ -46,8 +46,8 @@ body {
 
 .wheel-wrapper {
   position: relative;
-  width: 400px;
-  height: 400px;
+  width: min(80vh, 600px);
+  height: min(80vh, 600px);
 }
 
 .wheel {
@@ -69,18 +69,18 @@ body {
 
 .wheel-pointer {
   position: absolute;
-  top: -20px;
+  top: clamp(-15px, -3vh, -25px);
   left: 50%;
   transform: translateX(-50%);
-  font-size: 40px;
+  font-size: clamp(30px, 6vh, 50px);
   color: #FFD700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   z-index: 10;
 }
 
 .spin-button {
-  padding: 20px 50px;
-  font-size: 1.3rem;
+  padding: clamp(15px, 3vh, 25px) clamp(30px, 6vh, 60px);
+  font-size: clamp(1.1rem, 2.5vh, 1.5rem);
   font-weight: bold;
   color: white;
   background: #FFB643;

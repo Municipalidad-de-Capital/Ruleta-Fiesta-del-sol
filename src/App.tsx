@@ -283,8 +283,8 @@ function App() {
                     const y2 = 200 + 190 * Math.sin((endAngle * Math.PI) / 180)
                     
                     const textAngle = angle - 90 + (360 / themes.length) / 2
-                    const textX = 200 + 125 * Math.cos((textAngle * Math.PI) / 180)
-                    const textY = 200 + 125 * Math.sin((textAngle * Math.PI) / 180)
+                    const textX = 200 + 145 * Math.cos((textAngle * Math.PI) / 180)
+                    const textY = 200 + 145 * Math.sin((textAngle * Math.PI) / 180)
                     
                     return (
                       <g key={theme.name}>
@@ -298,7 +298,7 @@ function App() {
                           x={textX}
                           y={textY}
                           fill="white"
-                          fontSize="10"
+                          fontSize="11"
                           fontWeight="bold"
                           textAnchor="middle"
                           dominantBaseline="middle"
@@ -307,7 +307,7 @@ function App() {
                             textShadow: '2px 2px 3px rgba(0,0,0,0.8)',
                             filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.6))',
                             fontFamily: 'Arial, sans-serif',
-                            letterSpacing: '0.3px'
+                            letterSpacing: '0.1px'
                           }}
                         >
                           {theme.name}
