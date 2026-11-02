@@ -9,6 +9,8 @@ body {
   background: linear-gradient(135deg, #4B0983 0%, #8943EE 100%);
   min-height: 100vh;
   overflow-x: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 .app {
@@ -16,14 +18,18 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  justify-content: center;
+  padding: clamp(10px, 2vh, 40px);
+  width: 100%;
+  max-width: 100%;
 }
 
 .header {
   text-align: center;
   color: white;
-  margin-bottom: 30px;
+  margin-bottom: clamp(20px, 4vh, 50px);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  width: 100%;
 }
 
 .header h1 {
@@ -37,6 +43,14 @@ body {
   opacity: 0.9;
 }
 
+.spin-counter {
+  margin-top: clamp(10px, 2vh, 20px);
+  font-size: clamp(1rem, 2vh, 1.3rem);
+  font-weight: bold;
+  color: #FFD700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
 .wheel-container {
   display: flex;
   flex-direction: column;
@@ -46,8 +60,8 @@ body {
 
 .wheel-wrapper {
   position: relative;
-  width: min(80vh, 600px);
-  height: min(80vh, 600px);
+  width: min(70vh, 800px);
+  height: min(70vh, 800px);
 }
 
 .wheel {
@@ -57,8 +71,13 @@ body {
   position: relative;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border: 8px solid white;
+  border: clamp(6px, 1vh, 12px) solid white;
   background: white;
+  cursor: grab;
+}
+
+.wheel:active {
+  cursor: grabbing;
 }
 
 .wheel-svg {
@@ -69,10 +88,10 @@ body {
 
 .wheel-pointer {
   position: absolute;
-  top: clamp(-15px, -3vh, -25px);
+  top: clamp(-20px, -4vh, -40px);
   left: 50%;
   transform: translateX(-50%);
-  font-size: clamp(30px, 6vh, 50px);
+  font-size: clamp(40px, 8vh, 80px);
   color: #FFD700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   z-index: 10;
@@ -103,16 +122,16 @@ body {
 
 .score-display {
   background: rgba(255, 255, 255, 0.95);
-  padding: 15px 30px;
-  border-radius: 15px;
+  padding: clamp(15px, 3vh, 30px) clamp(25px, 5vh, 50px);
+  border-radius: clamp(10px, 2vh, 20px);
   text-align: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .score-display p {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2vh, 1.5rem);
   color: #333;
-  margin-bottom: 10px;
+  margin-bottom: clamp(8px, 1.5vh, 15px);
   font-weight: bold;
 }
 
@@ -133,22 +152,22 @@ body {
 
 .questions-container {
   width: 100%;
-  max-width: 700px;
+  max-width: min(90vw, 1200px);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: clamp(15px, 3vh, 30px);
 }
 
 .theme-header {
-  padding: 25px;
-  border-radius: 15px;
+  padding: clamp(20px, 4vh, 40px);
+  border-radius: clamp(10px, 2vh, 20px);
   text-align: center;
   color: white;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .theme-header h2 {
-  font-size: 1.8rem;
+  font-size: clamp(1.5rem, 3vh, 2.5rem);
   margin-bottom: 5px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
@@ -160,15 +179,15 @@ body {
 
 .question-card {
   background: white;
-  padding: 30px;
-  border-radius: 20px;
+  padding: clamp(20px, 4vh, 50px);
+  border-radius: clamp(15px, 3vh, 30px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .question-card h3 {
-  font-size: 1.4rem;
+  font-size: clamp(1.2rem, 2.5vh, 2rem);
   color: #333;
-  margin-bottom: 25px;
+  margin-bottom: clamp(15px, 3vh, 30px);
   line-height: 1.4;
 }
 
@@ -179,13 +198,13 @@ body {
 }
 
 .option-button {
-  padding: 18px 25px;
-  font-size: 1.1rem;
+  padding: clamp(15px, 3vh, 25px) clamp(20px, 4vh, 35px);
+  font-size: clamp(1rem, 2vh, 1.4rem);
   text-align: left;
   color: #333;
   background: #f8f9fa;
-  border: 3px solid #e9ecef;
-  border-radius: 12px;
+  border: clamp(2px, 0.4vh, 4px) solid #e9ecef;
+  border-radius: clamp(8px, 1.5vh, 15px);
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 500;
@@ -236,6 +255,45 @@ body {
 .next-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.results-container {
+  width: 100%;
+  max-width: min(90vw, 800px);
+  display: flex;
+  justify-content: center;
+}
+
+.results-card {
+  background: white;
+  padding: clamp(30px, 6vh, 60px);
+  border-radius: clamp(20px, 4vh, 40px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  width: 100%;
+}
+
+.results-card h2 {
+  font-size: clamp(2rem, 4vh, 3rem);
+  color: #4B0983;
+  margin-bottom: clamp(15px, 3vh, 30px);
+}
+
+.final-score {
+  font-size: clamp(1.5rem, 3vh, 2.5rem);
+  color: #333;
+  font-weight: bold;
+  margin-bottom: clamp(20px, 4vh, 40px);
+}
+
+.score-message {
+  margin-bottom: clamp(25px, 5vh, 50px);
+}
+
+.score-message p {
+  font-size: clamp(1.1rem, 2.2vh, 1.6rem);
+  color: #666;
+  line-height: 1.5;
 }
 
 @media (max-width: 768px) {

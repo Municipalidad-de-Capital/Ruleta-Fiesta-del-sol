@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useRef } from 'react'
+import { motion, AnimatePresence, type PanInfo } from 'framer-motion'
 import './App.css'
 
 interface Question {
@@ -196,23 +196,39 @@ function App() {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showResult, setShowResult] = useState(false)
   const [score, setScore] = useState(0)
+  const [spinCount, setSpinCount] = useState(0)
+  const [gameComplete, setGameComplete] = useState(false)
+  const [availableThemes, setAvailableThemes] = useState<number[]>([0, 1, 2, 3, 4, 5])
+  
+  const wheelRef = useRef<HTMLDivElement>(null)
 
-  const spinWheel = () => {
-    if (isSpinning) return
+  const spinWheel = (forcedIndex?: number) => {
+    if (isSpinning || spinCount >= 3) return
     setIsSpinning(true)
     setShowResult(false)
     setSelectedAnswer(null)
 
-    const randomRotation = Math.floor(Math.random() * 360) + 1440
-    setRotation(prev => prev + randomRotation)
+    let selectedIndex: number
+    if (forcedIndex !== undefined) {
+      selectedIndex = forcedIndex
+    } else {
+      const randomIndex = Math.floor(Math.random() * availableThemes.length)
+      selectedIndex = availableThemes[randomIndex]
+    }
+
+    const segmentAngle = 360 / themes.length
+    const targetAngle = 360 - (selectedIndex * segmentAngle + segmentAngle / 2)
+    const currentRotation = rotation % 360
+    const rotationNeeded = targetAngle - currentRotation + 1440
+    
+    setRotation(prev => prev + rotationNeeded)
 
     setTimeout(() => {
-      const normalizedRotation = (rotation + randomRotation) % 360
-      const segmentAngle = 360 / themes.length
-      const selectedIndex = Math.floor((360 - normalizedRotation + segmentAngle / 2) / segmentAngle) % themes.length
       setSelectedTheme(themes[selectedIndex])
       setCurrentQuestionIndex(0)
       setIsSpinning(false)
+      setSpinCount(prev => prev + 1)
+      setAvailableThemes(prev => prev.filter(i => i !== selectedIndex))
     }, 4000)
   }
 
@@ -227,15 +243,13 @@ function App() {
   }
 
   const nextQuestion = () => {
-    if (currentQuestionIndex < selectedTheme!.questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1)
-      setSelectedAnswer(null)
-      setShowResult(false)
-    } else {
-      setSelectedTheme(null)
-      setCurrentQuestionIndex(0)
-      setSelectedAnswer(null)
-      setShowResult(false)
+    setSelectedTheme(null)
+    setCurrentQuestionIndex(0)
+    setSelectedAnswer(null)
+    setShowResult(false)
+    
+    if (spinCount >= 3) {
+      setGameComplete(true)
     }
   }
 
@@ -245,13 +259,28 @@ function App() {
     setSelectedAnswer(null)
     setShowResult(false)
     setScore(0)
+    setSpinCount(0)
+    setGameComplete(false)
+    setAvailableThemes([0, 1, 2, 3, 4, 5])
+    setRotation(0)
+  }
+
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (isSpinning || spinCount >= 3) return
+    const velocity = info.velocity.x
+    if (Math.abs(velocity) > 500) {
+      spinWheel()
+    }
   }
 
   return (
     <div className="app">
       <header className="header">
-        <h1>🌞 FIESTA NACIONAL DEL SOL 2026</h1>
+        <h1> FIESTA NACIONAL DEL SOL 2026</h1>
         <p>¡Gira la ruleta y descubre San Juan!</p>
+        <div className="spin-counter">
+          <span>Tirada {spinCount + 1} de 3</span>
+        </div>
       </header>
 
       <AnimatePresence mode="wait">
@@ -265,10 +294,16 @@ function App() {
           >
             <div className="wheel-wrapper">
               <motion.div
+                ref={wheelRef}
                 className="wheel"
                 animate={{ rotate: rotation }}
                 transition={{ duration: 4, ease: "easeOut" }}
                 style={{ pointerEvents: isSpinning ? 'none' : 'auto' }}
+                drag
+                dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+                dragElastic={0.1}
+                onDragEnd={handleDragEnd}
+                whileDrag={{ cursor: 'grabbing' }}
               >
                 <svg viewBox="0 0 400 400" className="wheel-svg">
                   {themes.map((theme, index) => {
@@ -322,20 +357,45 @@ function App() {
 
             <motion.button
               className="spin-button"
-              onClick={spinWheel}
-              disabled={isSpinning}
+              onClick={() => spinWheel()}
+              disabled={isSpinning || spinCount >= 3}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {isSpinning ? '🎰 GIRANDO...' : '🎲 GIRAR RULETA'}
+              {isSpinning ? '🎰 GIRANDO...' : spinCount >= 3 ? '¡COMPLETADO!' : '🎲 GIRAR RULETA'}
             </motion.button>
 
-            {score > 0 && (
-              <div className="score-display">
-                <p>Puntuación: {score}</p>
-                <button onClick={resetGame} className="reset-button">Reiniciar</button>
+            <div className="score-display">
+              <p>Puntuación: {score}/3</p>
+              {spinCount > 0 && <button onClick={resetGame} className="reset-button">Reiniciar</button>}
+            </div>
+          </motion.div>
+        ) : gameComplete ? (
+          <motion.div
+            key="results"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="results-container"
+          >
+            <div className="results-card">
+              <h2>🎉 ¡Juego Completado!</h2>
+              <p className="final-score">Tu puntuación final: {score}/3</p>
+              <div className="score-message">
+                {score === 3 && <p>¡Excelente! Eres un experto en San Juan 🏆</p>}
+                {score === 2 && <p>¡Muy bien! Conoces mucho sobre San Juan 👏</p>}
+                {score === 1 && <p>¡Bien! Sigue aprendiendo sobre San Juan 📚</p>}
+                {score === 0 && <p>¡No te rindas! Inténtalo de nuevo 💪</p>}
               </div>
-            )}
+              <motion.button
+                className="next-button"
+                onClick={resetGame}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Jugar de Nuevo
+              </motion.button>
+            </div>
           </motion.div>
         ) : (
           <motion.div
@@ -350,7 +410,7 @@ function App() {
               style={{ backgroundColor: selectedTheme.color }}
             >
               <h2>{selectedTheme.name}</h2>
-              <p>Pregunta {currentQuestionIndex + 1} de {selectedTheme.questions.length}</p>
+              <p>Pregunta {spinCount} de 3</p>
             </div>
 
             <div className="question-card">
@@ -390,7 +450,7 @@ function App() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
-                  {currentQuestionIndex < selectedTheme.questions.length - 1 ? 'Siguiente Pregunta →' : 'Volver a la Ruleta'}
+                  {spinCount < 3 ? 'Volver a la Ruleta' : 'Ver Resultados'}
                 </motion.button>
               )}
             </div>
