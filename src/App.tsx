@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { motion, AnimatePresence, type PanInfo } from 'framer-motion'
+import { motion, type PanInfo } from 'framer-motion'
 import './App.css'
 
 interface Question {
@@ -225,7 +225,9 @@ function App() {
 
     setTimeout(() => {
       setSelectedTheme(themes[selectedIndex])
-      setCurrentQuestionIndex(0)
+      // Seleccionar pregunta aleatoria dentro del tema
+      const randomQuestionIndex = Math.floor(Math.random() * themes[selectedIndex].questions.length)
+      setCurrentQuestionIndex(randomQuestionIndex)
       setIsSpinning(false)
       setSpinCount(prev => prev + 1)
       setAvailableThemes(prev => prev.filter(i => i !== selectedIndex))
@@ -247,6 +249,7 @@ function App() {
     setCurrentQuestionIndex(0)
     setSelectedAnswer(null)
     setShowResult(false)
+    // No girar la ruleta automáticamente, solo volver a mostrarla
     
     if (spinCount >= 3) {
       setGameComplete(true)
@@ -279,184 +282,176 @@ function App() {
         <h1> FIESTA NACIONAL DEL SOL 2026</h1>
         <p>¡Gira la ruleta y descubre San Juan!</p>
         <div className="spin-counter">
-          <span>Tirada {spinCount + 1} de 3</span>
+          <span>Tirada {Math.min(spinCount + 1, 3)} de 3</span>
         </div>
       </header>
 
-      <AnimatePresence mode="wait">
-        {!selectedTheme ? (
-          <motion.div
-            key="wheel"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="wheel-container"
+      <div style={{ display: selectedTheme ? 'none' : 'block' }}>
+        <div className="wheel-container">
+          <div className="wheel-wrapper">
+            <motion.div
+              ref={wheelRef}
+              className="wheel"
+              animate={{ rotate: rotation }}
+              transition={{ duration: 4, ease: "easeOut" }}
+              style={{ pointerEvents: isSpinning ? 'none' : 'auto' }}
+              drag
+              dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+              dragElastic={0.1}
+              onDragEnd={handleDragEnd}
+              whileDrag={{ cursor: 'grabbing' }}
+            >
+              <svg viewBox="0 0 400 400" className="wheel-svg">
+                {themes.map((theme, index) => {
+                  const angle = (360 / themes.length) * index
+                  const nextAngle = (360 / themes.length) * (index + 1)
+                  const startAngle = angle - 90
+                  const endAngle = nextAngle - 90
+                  
+                  const x1 = 200 + 190 * Math.cos((startAngle * Math.PI) / 180)
+                  const y1 = 200 + 190 * Math.sin((startAngle * Math.PI) / 180)
+                  const x2 = 200 + 190 * Math.cos((endAngle * Math.PI) / 180)
+                  const y2 = 200 + 190 * Math.sin((endAngle * Math.PI) / 180)
+                  
+                  const textAngle = angle - 90 + (360 / themes.length) / 2
+                  const textX = 200 + 145 * Math.cos((textAngle * Math.PI) / 180)
+                  const textY = 200 + 145 * Math.sin((textAngle * Math.PI) / 180)
+                  
+                  return (
+                    <g key={theme.name}>
+                      <path
+                        d={`M 200 200 L ${x1} ${y1} A 190 190 0 0 1 ${x2} ${y2} Z`}
+                        fill={theme.color}
+                        stroke="white"
+                        strokeWidth="3"
+                      />
+                      <text
+                        x={textX}
+                        y={textY}
+                        fill="white"
+                        fontSize="11"
+                        fontWeight="bold"
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        transform={`rotate(${textAngle + 90}, ${textX}, ${textY})`}
+                        style={{
+                          textShadow: '2px 2px 3px rgba(0,0,0,0.8)',
+                          filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.6))',
+                          fontFamily: 'Arial, sans-serif',
+                          letterSpacing: '0.1px'
+                        }}
+                      >
+                        {theme.name}
+                      </text>
+                    </g>
+                  )
+                })}
+              </svg>
+            </motion.div>
+            <div className="wheel-pointer">▼</div>
+          </div>
+
+          <motion.button
+            className="spin-button"
+            onClick={() => spinWheel()}
+            disabled={isSpinning || spinCount >= 3}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <div className="wheel-wrapper">
-              <motion.div
-                ref={wheelRef}
-                className="wheel"
-                animate={{ rotate: rotation }}
-                transition={{ duration: 4, ease: "easeOut" }}
-                style={{ pointerEvents: isSpinning ? 'none' : 'auto' }}
-                drag
-                dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-                dragElastic={0.1}
-                onDragEnd={handleDragEnd}
-                whileDrag={{ cursor: 'grabbing' }}
-              >
-                <svg viewBox="0 0 400 400" className="wheel-svg">
-                  {themes.map((theme, index) => {
-                    const angle = (360 / themes.length) * index
-                    const nextAngle = (360 / themes.length) * (index + 1)
-                    const startAngle = angle - 90
-                    const endAngle = nextAngle - 90
-                    
-                    const x1 = 200 + 190 * Math.cos((startAngle * Math.PI) / 180)
-                    const y1 = 200 + 190 * Math.sin((startAngle * Math.PI) / 180)
-                    const x2 = 200 + 190 * Math.cos((endAngle * Math.PI) / 180)
-                    const y2 = 200 + 190 * Math.sin((endAngle * Math.PI) / 180)
-                    
-                    const textAngle = angle - 90 + (360 / themes.length) / 2
-                    const textX = 200 + 145 * Math.cos((textAngle * Math.PI) / 180)
-                    const textY = 200 + 145 * Math.sin((textAngle * Math.PI) / 180)
-                    
-                    return (
-                      <g key={theme.name}>
-                        <path
-                          d={`M 200 200 L ${x1} ${y1} A 190 190 0 0 1 ${x2} ${y2} Z`}
-                          fill={theme.color}
-                          stroke="white"
-                          strokeWidth="3"
-                        />
-                        <text
-                          x={textX}
-                          y={textY}
-                          fill="white"
-                          fontSize="11"
-                          fontWeight="bold"
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                          transform={`rotate(${textAngle + 90}, ${textX}, ${textY})`}
-                          style={{
-                            textShadow: '2px 2px 3px rgba(0,0,0,0.8)',
-                            filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.6))',
-                            fontFamily: 'Arial, sans-serif',
-                            letterSpacing: '0.1px'
-                          }}
-                        >
-                          {theme.name}
-                        </text>
-                      </g>
-                    )
-                  })}
-                </svg>
-              </motion.div>
-              <div className="wheel-pointer">▼</div>
+            {isSpinning ? '🎰 GIRANDO...' : spinCount >= 3 ? '¡COMPLETADO!' : '🎲 GIRAR RULETA'}
+          </motion.button>
+
+          <div className="score-display">
+            <p>Puntuación: {score}/3</p>
+            {spinCount > 0 && <button onClick={resetGame} className="reset-button">Reiniciar</button>}
+          </div>
+        </div>
+      </div>
+
+      {selectedTheme && !gameComplete && (
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="questions-container"
+        >
+          <div
+            className="theme-header"
+            style={{ backgroundColor: selectedTheme.color }}
+          >
+            <h2>{selectedTheme.name}</h2>
+            <p>Pregunta {spinCount} de 3</p>
+          </div>
+
+          <div className="question-card">
+            <h3>{selectedTheme.questions[currentQuestionIndex].question}</h3>
+
+            <div className="options">
+              {selectedTheme.questions[currentQuestionIndex].options.map((option, index) => (
+                <motion.button
+                  key={index}
+                  className={`option-button ${
+                    showResult
+                      ? index === selectedTheme.questions[currentQuestionIndex].correct
+                        ? 'correct'
+                        : selectedAnswer === index
+                        ? 'incorrect'
+                        : ''
+                      : selectedAnswer === index
+                      ? 'selected'
+                      : ''
+                  }`}
+                  onClick={() => handleAnswer(index)}
+                  disabled={showResult}
+                  whileHover={{ scale: showResult ? 1 : 1.02 }}
+                  whileTap={{ scale: showResult ? 1 : 0.98 }}
+                >
+                  {String.fromCharCode(65 + index)}) {option}
+                  {showResult && index === selectedTheme.questions[currentQuestionIndex].correct && ' ✓'}
+                  {showResult && selectedAnswer === index && index !== selectedTheme.questions[currentQuestionIndex].correct && ' ✗'}
+                </motion.button>
+              ))}
             </div>
 
+            {showResult && (
+              <motion.button
+                className="next-button"
+                onClick={nextQuestion}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                {spinCount < 3 ? 'Volver a la Ruleta' : 'Ver Resultados'}
+              </motion.button>
+            )}
+          </div>
+        </motion.div>
+      )}
+
+      {gameComplete && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="results-container"
+        >
+          <div className="results-card">
+            <h2>🎉 ¡Juego Completado!</h2>
+            <p className="final-score">Tu puntuación final: {score}/3</p>
+            <div className="score-message">
+              {score === 3 && <p>¡Excelente! Eres un experto en San Juan 🏆</p>}
+              {score === 2 && <p>¡Muy bien! Conoces mucho sobre San Juan 👏</p>}
+              {score === 1 && <p>¡Bien! Sigue aprendiendo sobre San Juan 📚</p>}
+              {score === 0 && <p>¡No te rindas! Inténtalo de nuevo 💪</p>}
+            </div>
             <motion.button
-              className="spin-button"
-              onClick={() => spinWheel()}
-              disabled={isSpinning || spinCount >= 3}
+              className="next-button"
+              onClick={resetGame}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {isSpinning ? '🎰 GIRANDO...' : spinCount >= 3 ? '¡COMPLETADO!' : '🎲 GIRAR RULETA'}
+              Jugar de Nuevo
             </motion.button>
-
-            <div className="score-display">
-              <p>Puntuación: {score}/3</p>
-              {spinCount > 0 && <button onClick={resetGame} className="reset-button">Reiniciar</button>}
-            </div>
-          </motion.div>
-        ) : gameComplete ? (
-          <motion.div
-            key="results"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="results-container"
-          >
-            <div className="results-card">
-              <h2>🎉 ¡Juego Completado!</h2>
-              <p className="final-score">Tu puntuación final: {score}/3</p>
-              <div className="score-message">
-                {score === 3 && <p>¡Excelente! Eres un experto en San Juan 🏆</p>}
-                {score === 2 && <p>¡Muy bien! Conoces mucho sobre San Juan 👏</p>}
-                {score === 1 && <p>¡Bien! Sigue aprendiendo sobre San Juan 📚</p>}
-                {score === 0 && <p>¡No te rindas! Inténtalo de nuevo 💪</p>}
-              </div>
-              <motion.button
-                className="next-button"
-                onClick={resetGame}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Jugar de Nuevo
-              </motion.button>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="questions"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            className="questions-container"
-          >
-            <div
-              className="theme-header"
-              style={{ backgroundColor: selectedTheme.color }}
-            >
-              <h2>{selectedTheme.name}</h2>
-              <p>Pregunta {spinCount} de 3</p>
-            </div>
-
-            <div className="question-card">
-              <h3>{selectedTheme.questions[currentQuestionIndex].question}</h3>
-
-              <div className="options">
-                {selectedTheme.questions[currentQuestionIndex].options.map((option, index) => (
-                  <motion.button
-                    key={index}
-                    className={`option-button ${
-                      showResult
-                        ? index === selectedTheme.questions[currentQuestionIndex].correct
-                          ? 'correct'
-                          : selectedAnswer === index
-                          ? 'incorrect'
-                          : ''
-                        : selectedAnswer === index
-                        ? 'selected'
-                        : ''
-                    }`}
-                    onClick={() => handleAnswer(index)}
-                    disabled={showResult}
-                    whileHover={{ scale: showResult ? 1 : 1.02 }}
-                    whileTap={{ scale: showResult ? 1 : 0.98 }}
-                  >
-                    {String.fromCharCode(65 + index)}) {option}
-                    {showResult && index === selectedTheme.questions[currentQuestionIndex].correct && ' ✓'}
-                    {showResult && selectedAnswer === index && index !== selectedTheme.questions[currentQuestionIndex].correct && ' ✗'}
-                  </motion.button>
-                ))}
-              </div>
-
-              {showResult && (
-                <motion.button
-                  className="next-button"
-                  onClick={nextQuestion}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  {spinCount < 3 ? 'Volver a la Ruleta' : 'Ver Resultados'}
-                </motion.button>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </motion.div>
+      )}
     </div>
   )
 }
