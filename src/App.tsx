@@ -1,6 +1,12 @@
 import { useState, useRef } from 'react'
 import { motion, type PanInfo } from 'framer-motion'
 import './App.css'
+import atractivosIcon from './assets/Atractivos.svg'
+import culturaIcon from './assets/Cultura.svg'
+import curiosidadesIcon from './assets/Curiosidades.svg'
+import gastronomiaIcon from './assets/Gastronomia.svg'
+import reciclarIcon from './assets/Reciclar.svg'
+import triasicoIcon from './assets/Triasico.svg'
 
 interface Question {
   question: string
@@ -12,6 +18,15 @@ interface Theme {
   name: string
   color: string
   questions: Question[]
+}
+
+const iconMap = {
+  0: atractivosIcon,
+  1: curiosidadesIcon,
+  2: culturaIcon,
+  3: gastronomiaIcon,
+  4: triasicoIcon,
+  5: reciclarIcon
 }
 
 const themes: Theme[] = [
@@ -48,7 +63,7 @@ const themes: Theme[] = [
   },
   {
     name: 'CURIOSIDADES',
-    color: '#8943EE',
+    color: '#FFD180',
     questions: [
       {
         question: 'EN NUESTRA CIUDAD, EXISTE UNA ESPECIE ARBÓREA MUY PARTICULAR. ¿DE CUÁL SE TRATA?',
@@ -79,7 +94,7 @@ const themes: Theme[] = [
   },
   {
     name: 'CULTURA/HISTORIA',
-    color: '#4B0983',
+    color: '#FFB643',
     questions: [
       {
         question: '¿QUÉ RECONOCIDO EDUCADOR Y ESCRITOR SANJUANINO FUE PRESIDENTE DE LA NACIÓN?',
@@ -110,7 +125,7 @@ const themes: Theme[] = [
   },
   {
     name: 'GASTRONOMÍA',
-    color: '#FFB643',
+    color: '#FFD180',
     questions: [
       {
         question: '¿QUÉ CORTE DE CARNE ES EL MÁS REPRESENTATIVO DE SAN JUAN?',
@@ -141,7 +156,7 @@ const themes: Theme[] = [
   },
   {
     name: 'TRIÁSICO EN LA CIUDAD',
-    color: '#8943EE',
+    color: '#FFB643',
     questions: [
       {
         question: '¿EN QUÉ CALLE DE LA CIUDAD SE ENCUENTRA EL ENTE PROVINCIAL ISCHIGUALASTO?',
@@ -167,7 +182,7 @@ const themes: Theme[] = [
   },
   {
     name: 'LA CIUDAD RECICLA',
-    color: '#4B0983',
+    color: '#FFD180',
     questions: [
       {
         question: '¿Cómo tienen que estar los residuos reciclable antes de entregarlos?',
@@ -317,6 +332,8 @@ function App() {
                   const textX = 200 + 145 * Math.cos((textAngle * Math.PI) / 180)
                   const textY = 200 + 145 * Math.sin((textAngle * Math.PI) / 180)
                   
+                  const iconUrl = iconMap[index as keyof typeof iconMap]
+                  
                   return (
                     <g key={theme.name}>
                       <path
@@ -325,24 +342,15 @@ function App() {
                         stroke="white"
                         strokeWidth="3"
                       />
-                      <text
-                        x={textX}
-                        y={textY}
-                        fill="white"
-                        fontSize="11"
-                        fontWeight="bold"
-                        textAnchor="middle"
-                        dominantBaseline="middle"
+                      <image
+                        href={iconUrl}
+                        x={textX - 20}
+                        y={textY - 20}
+                        width="40"
+                        height="40"
                         transform={`rotate(${textAngle + 90}, ${textX}, ${textY})`}
-                        style={{
-                          textShadow: '2px 2px 3px rgba(0,0,0,0.8)',
-                          filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.6))',
-                          fontFamily: 'Arial, sans-serif',
-                          letterSpacing: '0.1px'
-                        }}
-                      >
-                        {theme.name}
-                      </text>
+                        style={{ filter: 'drop-shadow(2px 2px 3px rgba(0,0,0,0.6))' }}
+                      />
                     </g>
                   )
                 })}
