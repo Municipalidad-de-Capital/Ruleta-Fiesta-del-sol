@@ -1,4 +1,6 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -54,9 +56,9 @@ button {
 }
 
 .header h1 {
-  font-size: clamp(2rem, 5vh, 3.5rem);
-  margin-bottom: 10px;
-  font-weight: 700;
+  font-size: clamp(10rem, 8vh, 10rem);
+  margin-bottom: 145px;
+  font-weight: 900;
 }
 
 .header p {
@@ -66,7 +68,7 @@ button {
 
 .spin-counter {
   margin-top: clamp(10px, 2vh, 20px);
-  font-size: clamp(1.1rem, 2.2vh, 1.5rem);
+  font-size: clamp(1.5rem, 3vh, 2.5rem);
   font-weight: bold;
   color: #FFD700;
   text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.6);
@@ -90,7 +92,7 @@ button {
 .wheel-wrapper {
   position: relative;
 
-  width: min(100vh, 1000px, 95vw);
+  width: min(150vh, 1000px, 95vw);
   aspect-ratio: 1 / 1;
   height: auto;
 
@@ -249,7 +251,7 @@ button {
 }
 
 .score-display p {
-  font-size: clamp(5.5rem, 4.5vh, 5.5rem);
+  font-size: clamp(8.5rem, 4.5vh, 8.5rem);
   color: #333;
   margin-bottom: clamp(25px, 3vh, 25px);
   font-weight: bold;
@@ -262,6 +264,7 @@ button {
 
   color: white;
   background: #FFB643;
+  font-weight: bold;
 
   border: none;
   border-radius: 20px;
@@ -306,15 +309,21 @@ button {
   border-radius: clamp(10px, 2vh, 20px);
 
   text-align: center;
-  color: white;
+  color: black;
+  font-weight: bold;
+  font-family: 'Archivo', sans-serif;
 
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.theme-header.atractivos {
+  color: black;
 }
 
 .theme-header h2 {
   font-size: clamp(1.8rem, 3.5vh, 3rem);
   margin-bottom: 5px;
-
+  color: black;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
@@ -496,7 +505,7 @@ button {
   }
 
   .header h1 {
-    font-size: clamp(1.5rem, 6vw, 2rem);
+    font-size: clamp(3rem, 8vw, 4rem);
   }
 
   .header p {
@@ -504,7 +513,7 @@ button {
   }
 
   .wheel-wrapper {
-    width: min(76vw, 340px);
+    width: min(96vw, 340px);
     height: auto;
     aspect-ratio: 1 / 1;
   }
@@ -544,7 +553,7 @@ button {
   }
 
   .header h1 {
-    font-size: 1.65rem;
+    font-size: 2.5rem;
   }
 
   .header p {
@@ -560,7 +569,7 @@ button {
   }
 
   .score-display {
-    padding: 18px 30px;
+    padding: 18px 40px;
   }
 }
 
@@ -579,7 +588,7 @@ button {
   }
 
   .wheel-wrapper {
-    width: min(90vh, 950px);
+    width: min(110vh, 1100px);
     height: auto;
     aspect-ratio: 1 / 1;
   }
@@ -589,15 +598,15 @@ button {
   }
 
   .header h1 {
-    font-size: clamp(2.5rem, 5vh, 4rem);
+    font-size: clamp(5rem, 7vh, 6rem);
   }
 
   .spin-button {
-    font-size: clamp(1.3rem, 2.5vh, 1.8rem);
+    font-size: clamp(2.3rem, 2.5vh, 2.3rem);
   }
 
   .score-display p {
-    font-size: clamp(1.2rem, 2.2vh, 1.7rem);
+    font-size: clamp(2.2rem, 2.2vh, 2.2rem);
   }
 }
 
@@ -618,7 +627,7 @@ button {
   }
 
   .wheel-wrapper {
-    width: min(110vh, 1200px);
+    width: min(130vh, 1400px);
   }
 
   .header {
@@ -626,16 +635,16 @@ button {
   }
 
   .header h1 {
-    font-size: clamp(3rem, 6vh, 5rem);
+    font-size: clamp(6rem, 8vh, 7rem);
   }
 
   .score-display {
-    padding: clamp(40px, 6vh, 80px)
-             clamp(60px, 9vh, 100px);
+    padding: clamp(50px, 6vh, 100px)
+             clamp(70px, 9vh, 140px);
   }
 
   .score-display p {
-    font-size: clamp(2rem, 4vh, 3rem);
+    font-size: clamp(3rem, 4vh, 3rem);
   }
 
   .subtract-icon-container img {

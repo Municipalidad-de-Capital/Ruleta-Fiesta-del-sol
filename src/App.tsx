@@ -129,7 +129,7 @@ const themes: Theme[] = [
   },
   {
     name: 'GASTRONOMÍA',
-    color: '#FFB643',
+    color: '#FFD180',
     questions: [
       {
         question: '¿QUÉ CORTE DE CARNE ES EL MÁS REPRESENTATIVO DE SAN JUAN?',
@@ -410,9 +410,9 @@ function App() {
 
         {/*<p>¡Gira la ruleta y descubre San Juan!</p> */}
 
-        {/* <div className="spin-counter">
+        <div className="spin-counter">
           <span>Tirada {Math.min(spinCount + 1, 3)} de 3</span>
-        </div> */}
+        </div>
       </header>
 
       {/* RUleta */}
@@ -558,7 +558,7 @@ function App() {
         >
 
           <div
-            className="theme-header"
+            className={`theme-header ${selectedTheme.name === 'ATRACTIVOS' ? 'atractivos' : ''}`}
             style={{ backgroundColor: selectedTheme.color }}
           >
 
