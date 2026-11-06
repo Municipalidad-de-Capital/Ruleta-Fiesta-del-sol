@@ -753,7 +753,8 @@ function App() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Volver a intentar
+              <RotateCcw size={24} />
+              Volver a empezar
             </motion.button>
           </div>
 
@@ -804,7 +805,8 @@ function App() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Jugar de Nuevo
+              <RotateCcw size={24} />
+              Volver a empezar
             </motion.button>
           </div>
 

@@ -557,7 +557,7 @@ button {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: clamp(40px, 6vh, 80px) 0 clamp(30px, 4vh, 50px) 0;
+  padding: clamp(60px, 8vh, 100px) 0 clamp(30px, 4vh, 50px) 0;
 
   z-index: 1000;
 }
@@ -572,14 +572,14 @@ button {
 .game-over-content {
   text-align: center;
   color: white;
-  margin-bottom: clamp(20px, 3vh, 30px);
+  margin-bottom: clamp(30px, 4vh, 50px);
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .game-over-content h1 {
-  font-size: clamp(2rem, 4vh, 3rem);
+  font-size: clamp(3rem, 6vh, 5rem);
   font-weight: 700;
-  margin-bottom: clamp(10px, 2vh, 15px);
+  margin-bottom: clamp(30px, 4vh, 50px);
   font-family: 'Archivo', sans-serif;
 }
 
@@ -666,18 +666,19 @@ button {
 .victory-content {
   text-align: center;
   color: white;
+  margin-bottom: clamp(30px, 4vh, 50px);
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .victory-content h1 {
-  font-size: clamp(2rem, 4vh, 3rem);
+  font-size: clamp(3rem, 6vh, 5rem);
   font-weight: 700;
   margin-bottom: clamp(10px, 2vh, 15px);
   font-family: 'Archivo', sans-serif;
 }
 
 .victory-content h2 {
-  font-size: clamp(2.5rem, 5vh, 4rem);
+  font-size: clamp(4rem, 8vh, 7rem);
   font-weight: 900;
   margin: 0;
   font-family: 'Archivo', sans-serif;
@@ -725,21 +726,22 @@ button {
   font-family: 'Archivo', sans-serif;
 
   color: white;
-  background: rgba(255, 255, 255, 0.2);
+  background: #FFC14F;
 
-  border: 3px solid white;
+  border: none;
   border-radius: 20px;
 
   cursor: pointer;
 
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-
   transition: all 0.3s ease;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .victory-button:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: #E5A93A;
   transform: translateY(-2px);
 }
 
