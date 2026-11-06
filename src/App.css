@@ -84,13 +84,13 @@ button {
   gap: clamp(20px, 3vh, 35px);
   width: 100%;
   flex: 1;
-  margin-top: clamp(50px, 5vh, 70px);
+  margin-top: clamp(170px, 10vh, 150px);
 }
 
 .wheel-wrapper {
   position: relative;
 
-  width: min(70vh, 760px, 88vw);
+  width: min(100vh, 1000px, 95vw);
   aspect-ratio: 1 / 1;
   height: auto;
 
@@ -164,6 +164,35 @@ button {
   pointer-events: none;
 }
 
+/* Botón central fijo */
+
+.center-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.center-button img {
+  width: clamp(60px, 8vh, 80px);
+  height: clamp(60px, 8vh, 80px);
+  filter: drop-shadow(2px 3px 4px rgba(0,0,0,0.35));
+}
+
+.center-button span {
+  position: absolute;
+  font-size: clamp(12px, 1.8vh, 16px);
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
 /* =================================
    BOTÓN GIRAR RULETA
 ================================= */
@@ -206,10 +235,10 @@ button {
 .score-display {
   background: rgba(255, 255, 255, 0.90);
 
-  padding: clamp(15px, 3vh, 30px)
-           clamp(25px, 5vh, 50px);
+  padding: clamp(45px, 6vh, 80px)
+           clamp(45px, 6vh, 80px);
 
-  border-radius: clamp(10px, 2vh, 20px);
+  border-radius: clamp(20px, 3vh, 30px);
 
   text-align: center;
 
@@ -220,15 +249,16 @@ button {
 }
 
 .score-display p {
-  font-size: clamp(1rem, 2vh, 1.5rem);
+  font-size: clamp(5.5rem, 4.5vh, 5.5rem);
   color: #333;
-  margin-bottom: clamp(8px, 1.5vh, 15px);
+  margin-bottom: clamp(25px, 3vh, 25px);
   font-weight: bold;
 }
 
 .reset-button {
-  padding: 8px 20px;
-  font-size: 0.9rem;
+  padding: clamp(18px, 3vh, 25px)
+           clamp(35px, 5vh, 55px);
+  font-size: clamp(1.3rem, 2.5vh, 1.8rem);
 
   color: white;
   background: #FFB643;
@@ -244,9 +274,21 @@ button {
   background: #4B0983;
 }
 
-/* =================================
-   PANTALLA DE PREGUNTAS
-================================= */
+
+
+.subtract-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: clamp(120px, 8vh, 80px);
+}
+
+.subtract-icon-container img {
+  width: clamp(650px, 10vw, 150px);
+  height: auto;
+}
+
+
 
 .questions-container {
   width: 100%;
@@ -259,7 +301,7 @@ button {
 }
 
 .theme-header {
-  padding: clamp(20px, 4vh, 40px);
+  padding: clamp(25px, 5vh, 50px);
 
   border-radius: clamp(10px, 2vh, 20px);
 
@@ -270,21 +312,21 @@ button {
 }
 
 .theme-header h2 {
-  font-size: clamp(1.5rem, 3vh, 2.5rem);
+  font-size: clamp(1.8rem, 3.5vh, 3rem);
   margin-bottom: 5px;
 
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .theme-header p {
-  font-size: 1rem;
+  font-size: clamp(1.1rem, 2vh, 1.4rem);
   opacity: 0.9;
 }
 
 .question-card {
   background: white;
 
-  padding: clamp(20px, 4vh, 50px);
+  padding: clamp(30px, 5vh, 60px);
 
   border-radius: clamp(15px, 3vh, 30px);
 
@@ -292,11 +334,11 @@ button {
 }
 
 .question-card h3 {
-  font-size: clamp(1.2rem, 2.5vh, 2rem);
+  font-size: clamp(1.5rem, 3vh, 2.5rem);
 
   color: #333;
 
-  margin-bottom: clamp(15px, 3vh, 30px);
+  margin-bottom: clamp(20px, 4vh, 35px);
 
   line-height: 1.4;
 }
@@ -304,14 +346,14 @@ button {
 .options {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: clamp(18px, 3vh, 25px);
 }
 
 .option-button {
-  padding: clamp(15px, 3vh, 25px)
-           clamp(20px, 4vh, 35px);
+  padding: clamp(25px, 5vh, 40px)
+           clamp(30px, 6vh, 50px);
 
-  font-size: clamp(1rem, 2vh, 1.4rem);
+  font-size: clamp(1.4rem, 3vh, 2rem);
 
   text-align: left;
   color: #333;
@@ -356,11 +398,12 @@ button {
 }
 
 .next-button {
-  margin-top: 25px;
+  margin-top: clamp(30px, 5vh, 40px);
 
-  padding: 15px 40px;
+  padding: clamp(18px, 3vh, 25px)
+           clamp(40px, 6vh, 60px);
 
-  font-size: 1.1rem;
+  font-size: clamp(1.3rem, 2.5vh, 1.8rem);
   font-weight: bold;
 
   color: white;
@@ -536,7 +579,7 @@ button {
   }
 
   .wheel-wrapper {
-    width: min(68vh, 760px);
+    width: min(90vh, 950px);
     height: auto;
     aspect-ratio: 1 / 1;
   }
@@ -557,3 +600,52 @@ button {
     font-size: clamp(1.2rem, 2.2vh, 1.7rem);
   }
 }
+
+/* =================================
+   PANTALLA 2160x3840 (VERTICAL)
+================================= */
+
+@media (min-width: 2000px) and (min-height: 3500px) {
+
+  .app {
+    gap: 30px;
+    padding: clamp(30px, 3vh, 60px);
+  }
+
+  .wheel-container {
+    margin-top: clamp(200px, 12vh, 300px);
+    gap: 50px;
+  }
+
+  .wheel-wrapper {
+    width: min(110vh, 1200px);
+  }
+
+  .header {
+    margin-bottom: clamp(30px, 4vh, 50px);
+  }
+
+  .header h1 {
+    font-size: clamp(3rem, 6vh, 5rem);
+  }
+
+  .score-display {
+    padding: clamp(40px, 6vh, 80px)
+             clamp(60px, 9vh, 100px);
+  }
+
+  .score-display p {
+    font-size: clamp(2rem, 4vh, 3rem);
+  }
+
+  .subtract-icon-container img {
+    width: clamp(800px, 15vw, 200px);
+  }
+
+  .center-button img {
+    width: clamp(80px, 10vh, 100px);
+    height: clamp(80px, 10vh, 100px);
+  }
+}
+
+

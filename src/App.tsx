@@ -9,6 +9,8 @@ import curiosidadesIcon from './assets/Curiosidades.svg'
 import gastronomiaIcon from './assets/Gastronomia.svg'
 import reciclarIcon from './assets/Reciclar.svg'
 import triasicoIcon from './assets/Triasico.svg'
+import subtractIcon from './assets/Group 395.svg'
+import botonGirarIcon from './assets/Vector.png'
 
 interface Question {
   question: string
@@ -127,7 +129,7 @@ const themes: Theme[] = [
   },
   {
     name: 'GASTRONOMÍA',
-    color: '#FFD180',
+    color: '#FFB643',
     questions: [
       {
         question: '¿QUÉ CORTE DE CARNE ES EL MÁS REPRESENTATIVO DE SAN JUAN?',
@@ -217,7 +219,6 @@ function App() {
   const [score, setScore] = useState(0)
   const [spinCount, setSpinCount] = useState(0)
   const [gameComplete, setGameComplete] = useState(false)
-  const [availableThemes, setAvailableThemes] = useState<number[]>([0, 1, 2, 3, 4, 5])
   const [isDragging, setIsDragging] = useState(false)
 
   const wheelRef = useRef<HTMLDivElement>(null)
@@ -229,65 +230,6 @@ function App() {
     angle: number
     rotation: number
   } | null>(null)
-
-  // Giro automático mediante el botón
-  const spinWheel = (forcedIndex?: number) => {
-    if (isSpinning || spinCount >= 3 || dragState.current) return
-
-    setIsSpinning(true)
-    setShowResult(false)
-    setSelectedAnswer(null)
-
-    let selectedIndex: number
-
-    if (forcedIndex !== undefined) {
-      selectedIndex = forcedIndex
-    } else {
-      const randomIndex = Math.floor(Math.random() * availableThemes.length)
-      selectedIndex = availableThemes[randomIndex]
-    }
-
-    const segmentAngle = 360 / themes.length
-
-    const targetAngle =
-      360 - (selectedIndex * segmentAngle + segmentAngle / 2)
-
-    // Tomar la posición real actual, incluso si se giró manualmente
-    const currentRotation = wheelRotation.get()
-
-    const normalizedRotation =
-      ((currentRotation % 360) + 360) % 360
-
-    // Agregar cuatro vueltas completas antes de detenerse
-    const rotationNeeded =
-      targetAngle - normalizedRotation + 1440
-
-    animate(
-      wheelRotation,
-      currentRotation + rotationNeeded,
-      {
-        duration: 4,
-        ease: 'easeOut'
-      }
-    )
-
-    setTimeout(() => {
-      setSelectedTheme(themes[selectedIndex])
-
-      // Pregunta aleatoria dentro de la categoría seleccionada
-      const randomQuestionIndex = Math.floor(
-        Math.random() * themes[selectedIndex].questions.length
-      )
-
-      setCurrentQuestionIndex(randomQuestionIndex)
-      setIsSpinning(false)
-      setSpinCount(prev => prev + 1)
-
-      setAvailableThemes(prev =>
-        prev.filter(i => i !== selectedIndex)
-      )
-    }, 4000)
-  }
 
   // Seleccionar una respuesta
   const handleAnswer = (answerIndex: number) => {
@@ -331,7 +273,6 @@ function App() {
     setScore(0)
     setSpinCount(0)
     setGameComplete(false)
-    setAvailableThemes([0, 1, 2, 3, 4, 5])
     setIsSpinning(false)
   }
 
@@ -458,10 +399,6 @@ function App() {
       setCurrentQuestionIndex(randomQuestionIndex)
       setIsSpinning(false)
       setSpinCount(prev => prev + 1)
-
-      setAvailableThemes(prev =>
-        prev.filter(i => i !== selectedIndex)
-      )
     }, 4000)
   }
 
@@ -469,13 +406,13 @@ function App() {
     <div className="app">
 
       <header className="header">
-        <h1> FIESTA NACIONAL DEL SOL 2026</h1>
+         <h1> ¡Juguemos!</h1>
 
-        <p>¡Gira la ruleta y descubre San Juan!</p>
+        {/*<p>¡Gira la ruleta y descubre San Juan!</p> */}
 
-        <div className="spin-counter">
+        {/* <div className="spin-counter">
           <span>Tirada {Math.min(spinCount + 1, 3)} de 3</span>
-        </div>
+        </div> */}
       </header>
 
       {/* RUleta */}
@@ -542,7 +479,7 @@ function App() {
                       <path
                         d={`M 200 200 L ${x1} ${y1} A 190 190 0 0 1 ${x2} ${y2} Z`}
                         fill={theme.color}
-                        fillOpacity="0.48"
+                        fillOpacity="0.7"
                         stroke="rgba(255,255,255,0.10)"
                         strokeWidth="0.8"
                       />
@@ -560,35 +497,17 @@ function App() {
                   )
                 })}
 
-                {/* Central circle with GIRAR text */}
-                <circle
-                  cx="200"
-                  cy="200"
-                  r="55"
-                  fill="white"
-                  stroke="rgba(0,0,0,0.1)"
-                  strokeWidth="2"
-                />
-                <text
-                  x="200"
-                  y="200"
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fontSize="18"
-                  fontWeight="bold"
-                  fill="#FFB643"
-                  style={{
-                    textShadow: '1px 1px 2px rgba(0,0,0,0.2)'
-                  }}
-                >
-                  GIRAR
-                </text>
-
               </svg>
 
             </motion.div>
 
-            <div className="wheel-pointer">▼</div>
+            {/* Fixed central button */}
+            <div className="center-button">
+              <img src={botonGirarIcon} alt="Girar" />
+
+              
+              
+            </div>
 
           </div>
 
@@ -620,6 +539,10 @@ function App() {
               </button>
             )}
 
+          </div>
+
+          <div className="subtract-icon-container">
+            <img src={subtractIcon} alt="Subtract" />
           </div>
 
         </div>
