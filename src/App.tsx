@@ -526,21 +526,6 @@ function App() {
                 : '🎲 GIRAR RULETA'}
           </motion.button>
  */}
-          <div className="score-display">
-
-            <p>Puntuación: {score}/3</p>
-
-            {spinCount > 0 && (
-              <button
-                onClick={resetGame}
-                className="reset-button"
-              >
-                Reiniciar
-              </button>
-            )}
-
-          </div>
-
           <div className="subtract-icon-container">
             <img src={subtractIcon} alt="Subtract" />
           </div>
