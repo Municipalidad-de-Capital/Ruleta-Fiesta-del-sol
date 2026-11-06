@@ -1,34 +1,55 @@
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html {
+  min-height: 100%;
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #4B0983 0%, #8943EE 100%);
+  background: url('./assets/dinosaurio.png') no-repeat center center fixed;
+  background-size: cover;
   min-height: 100vh;
+  min-height: 100svh;
   overflow-x: hidden;
   margin: 0;
   padding: 0;
 }
 
+button {
+  font-family: inherit;
+}
+
+/* =================================
+   CONTENEDOR PRINCIPAL
+================================= */
+
 .app {
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: clamp(10px, 2vh, 40px);
+  padding: clamp(15px, 2vh, 35px);
   width: 100%;
   max-width: 100%;
+  gap: clamp(15px, 2vh, 25px);
 }
+
+/* =================================
+   ENCABEZADO
+================================= */
 
 .header {
   text-align: center;
   color: white;
-  margin-bottom: clamp(20px, 4vh, 50px);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: clamp(10px, 2vh, 30px);
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.55);
   width: 100%;
 }
 
@@ -40,73 +61,131 @@ body {
 
 .header p {
   font-size: clamp(1rem, 2.5vh, 1.5rem);
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
 .spin-counter {
   margin-top: clamp(10px, 2vh, 20px);
-  font-size: clamp(1rem, 2vh, 1.3rem);
+  font-size: clamp(1.1rem, 2.2vh, 1.5rem);
   font-weight: bold;
   color: #FFD700;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.6);
 }
+
+/* =================================
+   RULETA
+================================= */
 
 .wheel-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
+  justify-content: center;
+  gap: clamp(20px, 3vh, 35px);
+  width: 100%;
+  flex: 1;
+  margin-top: clamp(50px, 5vh, 70px);
 }
 
 .wheel-wrapper {
   position: relative;
-  width: min(70vh, 800px);
-  height: min(70vh, 800px);
+
+  width: min(70vh, 760px, 88vw);
+  aspect-ratio: 1 / 1;
+  height: auto;
+
+  border: none;
+  outline: none;
+  background: transparent;
 }
+
+/* Cuerpo de la ruleta */
 
 .wheel {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+
   position: relative;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border: clamp(6px, 1vh, 12px) solid white;
-  background: white;
+
+  border: none !important;
+  outline: none !important;
+  border-radius: 50%;
+
+  background: transparent !important;
+  box-shadow: none !important;
+
+  overflow: visible;
+
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+
   cursor: grab;
+
+  filter: drop-shadow(
+    0px 5px 12px rgba(0, 0, 0, 0.30)
+  );
 }
 
 .wheel:active {
   cursor: grabbing;
 }
 
+/* SVG de los segmentos */
+
 .wheel-svg {
+  display: block;
   width: 100%;
   height: 100%;
-  display: block;
+
+  overflow: visible;
+  pointer-events: none;
 }
+
+/* Indicador superior */
 
 .wheel-pointer {
   position: absolute;
-  top: clamp(-20px, -4vh, -40px);
+
+  top: clamp(-25px, -3vh, -15px);
   left: 50%;
+
   transform: translateX(-50%);
-  font-size: clamp(40px, 8vh, 80px);
+
+  font-size: clamp(35px, 6vh, 65px);
+
   color: #FFD700;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+
   z-index: 10;
+
+  pointer-events: none;
 }
 
+/* =================================
+   BOTÓN GIRAR RULETA
+================================= */
+
 .spin-button {
-  padding: clamp(15px, 3vh, 25px) clamp(30px, 6vh, 60px);
-  font-size: clamp(1.1rem, 2.5vh, 1.5rem);
+  padding: clamp(15px, 2.5vh, 25px)
+           clamp(35px, 5vw, 65px);
+
+  font-size: clamp(1.1rem, 2.5vh, 1.6rem);
+
   font-weight: bold;
   color: white;
+
   background: #FFB643;
+
   border: none;
   border-radius: 50px;
+
   cursor: pointer;
+
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+
   transition: all 0.3s ease;
 }
 
@@ -120,12 +199,24 @@ body {
   cursor: not-allowed;
 }
 
+/* =================================
+   PUNTUACIÓN
+================================= */
+
 .score-display {
-  background: rgba(255, 255, 255, 0.95);
-  padding: clamp(15px, 3vh, 30px) clamp(25px, 5vh, 50px);
+  background: rgba(255, 255, 255, 0.90);
+
+  padding: clamp(15px, 3vh, 30px)
+           clamp(25px, 5vh, 50px);
+
   border-radius: clamp(10px, 2vh, 20px);
+
   text-align: center;
+
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .score-display p {
@@ -138,10 +229,13 @@ body {
 .reset-button {
   padding: 8px 20px;
   font-size: 0.9rem;
+
   color: white;
   background: #FFB643;
+
   border: none;
   border-radius: 20px;
+
   cursor: pointer;
   transition: background 0.3s ease;
 }
@@ -150,25 +244,35 @@ body {
   background: #4B0983;
 }
 
+/* =================================
+   PANTALLA DE PREGUNTAS
+================================= */
+
 .questions-container {
   width: 100%;
   max-width: min(90vw, 1200px);
+
   display: flex;
   flex-direction: column;
+
   gap: clamp(15px, 3vh, 30px);
 }
 
 .theme-header {
   padding: clamp(20px, 4vh, 40px);
+
   border-radius: clamp(10px, 2vh, 20px);
+
   text-align: center;
   color: white;
+
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .theme-header h2 {
   font-size: clamp(1.5rem, 3vh, 2.5rem);
   margin-bottom: 5px;
+
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
@@ -179,15 +283,21 @@ body {
 
 .question-card {
   background: white;
+
   padding: clamp(20px, 4vh, 50px);
+
   border-radius: clamp(15px, 3vh, 30px);
+
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .question-card h3 {
   font-size: clamp(1.2rem, 2.5vh, 2rem);
+
   color: #333;
+
   margin-bottom: clamp(15px, 3vh, 30px);
+
   line-height: 1.4;
 }
 
@@ -198,15 +308,23 @@ body {
 }
 
 .option-button {
-  padding: clamp(15px, 3vh, 25px) clamp(20px, 4vh, 35px);
+  padding: clamp(15px, 3vh, 25px)
+           clamp(20px, 4vh, 35px);
+
   font-size: clamp(1rem, 2vh, 1.4rem);
+
   text-align: left;
   color: #333;
+
   background: #f8f9fa;
+
   border: clamp(2px, 0.4vh, 4px) solid #e9ecef;
+
   border-radius: clamp(8px, 1.5vh, 15px);
+
   cursor: pointer;
   transition: all 0.3s ease;
+
   font-weight: 500;
 }
 
@@ -239,16 +357,24 @@ body {
 
 .next-button {
   margin-top: 25px;
+
   padding: 15px 40px;
+
   font-size: 1.1rem;
   font-weight: bold;
+
   color: white;
   background: #FFB643;
+
   border: none;
   border-radius: 30px;
+
   cursor: pointer;
+
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
   transition: all 0.3s ease;
+
   width: 100%;
 }
 
@@ -257,32 +383,45 @@ body {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* =================================
+   RESULTADOS FINALES
+================================= */
+
 .results-container {
   width: 100%;
   max-width: min(90vw, 800px);
+
   display: flex;
   justify-content: center;
 }
 
 .results-card {
   background: white;
+
   padding: clamp(30px, 6vh, 60px);
+
   border-radius: clamp(20px, 4vh, 40px);
+
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
   text-align: center;
   width: 100%;
 }
 
 .results-card h2 {
   font-size: clamp(2rem, 4vh, 3rem);
+
   color: #4B0983;
+
   margin-bottom: clamp(15px, 3vh, 30px);
 }
 
 .final-score {
   font-size: clamp(1.5rem, 3vh, 2.5rem);
+
   color: #333;
   font-weight: bold;
+
   margin-bottom: clamp(20px, 4vh, 40px);
 }
 
@@ -292,13 +431,29 @@ body {
 
 .score-message p {
   font-size: clamp(1.1rem, 2.2vh, 1.6rem);
+
   color: #666;
   line-height: 1.5;
 }
 
+/* =================================
+   TABLETS Y CELULARES
+================================= */
+
 @media (max-width: 768px) {
+
+  .app {
+    justify-content: flex-start;
+    padding: 25px 12px;
+    gap: 10px;
+  }
+
+  .header {
+    margin-bottom: 15px;
+  }
+
   .header h1 {
-    font-size: 1.8rem;
+    font-size: clamp(1.5rem, 6vw, 2rem);
   }
 
   .header p {
@@ -306,18 +461,18 @@ body {
   }
 
   .wheel-wrapper {
-    width: 300px;
-    height: 300px;
-  }
-
-  .segment-text {
-    font-size: 0.7rem;
-    transform: rotate(30deg) translateY(-45px);
+    width: min(76vw, 340px);
+    height: auto;
+    aspect-ratio: 1 / 1;
   }
 
   .wheel-pointer {
-    font-size: 30px;
-    top: -15px;
+    font-size: 35px;
+    top: -18px;
+  }
+
+  .wheel-container {
+    gap: 22px;
   }
 
   .spin-button {
@@ -340,13 +495,65 @@ body {
 }
 
 @media (max-width: 480px) {
+
   .wheel-wrapper {
-    width: 250px;
-    height: 250px;
+    width: min(76vw, 310px);
   }
 
-  .segment-text {
-    font-size: 0.6rem;
-    transform: rotate(30deg) translateY(-35px);
+  .header h1 {
+    font-size: 1.65rem;
+  }
+
+  .header p {
+    font-size: 0.95rem;
+  }
+
+  .spin-counter {
+    font-size: 1rem;
+  }
+
+  .wheel-container {
+    gap: 20px;
+  }
+
+  .score-display {
+    padding: 18px 30px;
+  }
+}
+
+/* =================================
+   TELEVISORES Y PANTALLAS GRANDES
+================================= */
+
+@media (min-width: 1200px) {
+
+  .app {
+    gap: 15px;
+  }
+
+  .wheel-container {
+    gap: 30px;
+  }
+
+  .wheel-wrapper {
+    width: min(68vh, 760px);
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .header {
+    margin-bottom: 15px;
+  }
+
+  .header h1 {
+    font-size: clamp(2.5rem, 5vh, 4rem);
+  }
+
+  .spin-button {
+    font-size: clamp(1.3rem, 2.5vh, 1.8rem);
+  }
+
+  .score-display p {
+    font-size: clamp(1.2rem, 2.2vh, 1.7rem);
   }
 }

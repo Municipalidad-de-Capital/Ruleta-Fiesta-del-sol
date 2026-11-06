@@ -1,6 +1,8 @@
+
 import { useState, useRef } from 'react'
-import { motion, type PanInfo } from 'framer-motion'
+import { motion, useMotionValue, animate } from 'framer-motion'
 import './App.css'
+
 import atractivosIcon from './assets/Atractivos.svg'
 import culturaIcon from './assets/Cultura.svg'
 import curiosidadesIcon from './assets/Curiosidades.svg'
@@ -204,7 +206,9 @@ const themes: Theme[] = [
 ]
 
 function App() {
-  const [rotation, setRotation] = useState(0)
+  // Rotación directa de la ruleta mediante Framer Motion
+  const wheelRotation = useMotionValue(0)
+
   const [isSpinning, setIsSpinning] = useState(false)
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -214,16 +218,28 @@ function App() {
   const [spinCount, setSpinCount] = useState(0)
   const [gameComplete, setGameComplete] = useState(false)
   const [availableThemes, setAvailableThemes] = useState<number[]>([0, 1, 2, 3, 4, 5])
-  
+  const [isDragging, setIsDragging] = useState(false)
+
   const wheelRef = useRef<HTMLDivElement>(null)
 
+  // Información del movimiento táctil actual.
+  // Se actualiza en cada movimiento para permitir vueltas completas.
+  const dragState = useRef<{
+    pointerId: number
+    angle: number
+    rotation: number
+  } | null>(null)
+
+  // Giro automático mediante el botón
   const spinWheel = (forcedIndex?: number) => {
-    if (isSpinning || spinCount >= 3) return
+    if (isSpinning || spinCount >= 3 || dragState.current) return
+
     setIsSpinning(true)
     setShowResult(false)
     setSelectedAnswer(null)
 
     let selectedIndex: number
+
     if (forcedIndex !== undefined) {
       selectedIndex = forcedIndex
     } else {
@@ -232,46 +248,82 @@ function App() {
     }
 
     const segmentAngle = 360 / themes.length
-    const targetAngle = 360 - (selectedIndex * segmentAngle + segmentAngle / 2)
-    const currentRotation = rotation % 360
-    const rotationNeeded = targetAngle - currentRotation + 1440
-    
-    setRotation(prev => prev + rotationNeeded)
+
+    const targetAngle =
+      360 - (selectedIndex * segmentAngle + segmentAngle / 2)
+
+    // Tomar la posición real actual, incluso si se giró manualmente
+    const currentRotation = wheelRotation.get()
+
+    const normalizedRotation =
+      ((currentRotation % 360) + 360) % 360
+
+    // Agregar cuatro vueltas completas antes de detenerse
+    const rotationNeeded =
+      targetAngle - normalizedRotation + 1440
+
+    animate(
+      wheelRotation,
+      currentRotation + rotationNeeded,
+      {
+        duration: 4,
+        ease: 'easeOut'
+      }
+    )
 
     setTimeout(() => {
       setSelectedTheme(themes[selectedIndex])
-      // Seleccionar pregunta aleatoria dentro del tema
-      const randomQuestionIndex = Math.floor(Math.random() * themes[selectedIndex].questions.length)
+
+      // Pregunta aleatoria dentro de la categoría seleccionada
+      const randomQuestionIndex = Math.floor(
+        Math.random() * themes[selectedIndex].questions.length
+      )
+
       setCurrentQuestionIndex(randomQuestionIndex)
       setIsSpinning(false)
       setSpinCount(prev => prev + 1)
-      setAvailableThemes(prev => prev.filter(i => i !== selectedIndex))
+
+      setAvailableThemes(prev =>
+        prev.filter(i => i !== selectedIndex)
+      )
     }, 4000)
   }
 
+  // Seleccionar una respuesta
   const handleAnswer = (answerIndex: number) => {
     if (selectedAnswer !== null) return
+
     setSelectedAnswer(answerIndex)
     setShowResult(true)
 
-    if (answerIndex === selectedTheme!.questions[currentQuestionIndex].correct) {
+    if (
+      answerIndex ===
+      selectedTheme!.questions[currentQuestionIndex].correct
+    ) {
       setScore(prev => prev + 1)
     }
   }
 
+  // Volver a la ruleta después de responder
   const nextQuestion = () => {
     setSelectedTheme(null)
     setCurrentQuestionIndex(0)
     setSelectedAnswer(null)
     setShowResult(false)
-    // No girar la ruleta automáticamente, solo volver a mostrarla
-    
+
     if (spinCount >= 3) {
       setGameComplete(true)
     }
   }
 
+  // Reiniciar completamente el juego
   const resetGame = () => {
+    wheelRotation.stop()
+    wheelRotation.set(0)
+
+    dragState.current = null
+
+    setIsDragging(false)
     setSelectedTheme(null)
     setCurrentQuestionIndex(0)
     setSelectedAnswer(null)
@@ -280,175 +332,429 @@ function App() {
     setSpinCount(0)
     setGameComplete(false)
     setAvailableThemes([0, 1, 2, 3, 4, 5])
-    setRotation(0)
+    setIsSpinning(false)
   }
 
-  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+  // Comienza el movimiento manual con el dedo
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (isSpinning || spinCount >= 3) return
-    const velocity = info.velocity.x
-    if (Math.abs(velocity) > 500) {
-      spinWheel()
+
+    e.preventDefault()
+
+    const rect = wheelRef.current?.getBoundingClientRect()
+
+    if (!rect) return
+
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+
+    const startAngle =
+      Math.atan2(
+        e.clientY - centerY,
+        e.clientX - centerX
+      ) * (180 / Math.PI)
+
+    // Detener cualquier animación anterior
+    wheelRotation.stop()
+
+    // Guardar la posición inicial
+    dragState.current = {
+      pointerId: e.pointerId,
+      angle: startAngle,
+      rotation: wheelRotation.get()
     }
+
+    // Capturar el puntero para no perder el movimiento
+    e.currentTarget.setPointerCapture(e.pointerId)
+
+    setIsDragging(true)
+  }
+
+  // Mover la ruleta siguiendo el dedo
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragState.current
+
+    if (!drag || drag.pointerId !== e.pointerId) return
+
+    const rect = wheelRef.current?.getBoundingClientRect()
+
+    if (!rect) return
+
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+
+    const currentAngle =
+      Math.atan2(
+        e.clientY - centerY,
+        e.clientX - centerX
+      ) * (180 / Math.PI)
+
+    // Calcular el movimiento desde el último evento,
+    // no desde el inicio del arrastre.
+    let deltaAngle = currentAngle - drag.angle
+
+    // Corregir el salto entre -180 y 180 grados
+    if (deltaAngle > 180) {
+      deltaAngle -= 360
+    }
+
+    if (deltaAngle < -180) {
+      deltaAngle += 360
+    }
+
+    // Acumular la rotación para permitir vueltas completas
+    drag.rotation += deltaAngle
+    drag.angle = currentAngle
+
+    // Actualizar directamente la animación sin renderizar React
+    wheelRotation.set(drag.rotation)
+  }
+
+  // Finalizar el movimiento cuando se levanta el dedo
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragState.current
+
+    if (!drag || drag.pointerId !== e.pointerId) return
+
+    dragState.current = null
+
+    setIsDragging(false)
+
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId)
+    }
+
+    // Calcular el ángulo final y agregar inercia con varias vueltas
+    const currentRotation = wheelRotation.get()
+    const normalizedRotation = ((currentRotation % 360) + 360) % 360
+
+    // Determinar qué segmento quedó seleccionado
+    const segmentAngle = 360 / themes.length
+    const selectedIndex = Math.floor(((360 - normalizedRotation + segmentAngle / 2) % 360) / segmentAngle)
+
+    // Agregar 4 vueltas completas (1440°) para efecto de inercia
+    const targetRotation = currentRotation + 1440
+
+    setIsSpinning(true)
+    setShowResult(false)
+    setSelectedAnswer(null)
+
+    animate(
+      wheelRotation,
+      targetRotation,
+      {
+        duration: 4,
+        ease: 'easeOut'
+      }
+    )
+
+    setTimeout(() => {
+      setSelectedTheme(themes[selectedIndex])
+
+      const randomQuestionIndex = Math.floor(
+        Math.random() * themes[selectedIndex].questions.length
+      )
+
+      setCurrentQuestionIndex(randomQuestionIndex)
+      setIsSpinning(false)
+      setSpinCount(prev => prev + 1)
+
+      setAvailableThemes(prev =>
+        prev.filter(i => i !== selectedIndex)
+      )
+    }, 4000)
   }
 
   return (
     <div className="app">
+
       <header className="header">
         <h1> FIESTA NACIONAL DEL SOL 2026</h1>
+
         <p>¡Gira la ruleta y descubre San Juan!</p>
+
         <div className="spin-counter">
           <span>Tirada {Math.min(spinCount + 1, 3)} de 3</span>
         </div>
       </header>
 
+      {/* RUleta */}
       <div style={{ display: selectedTheme ? 'none' : 'block' }}>
         <div className="wheel-container">
+
           <div className="wheel-wrapper">
+
             <motion.div
               ref={wheelRef}
               className="wheel"
-              animate={{ rotate: rotation }}
-              transition={{ duration: 4, ease: "easeOut" }}
-              style={{ pointerEvents: isSpinning ? 'none' : 'auto' }}
-              drag
-              dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-              dragElastic={0.1}
-              onDragEnd={handleDragEnd}
-              whileDrag={{ cursor: 'grabbing' }}
+
+              style={{
+                rotate: wheelRotation,
+                pointerEvents: isSpinning ? 'none' : 'auto',
+                touchAction: 'none',
+                cursor: isDragging ? 'grabbing' : 'grab',
+                userSelect: 'none',
+                WebkitUserSelect: 'none'
+              }}
+
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
+              onLostPointerCapture={handlePointerUp}
             >
+
               <svg viewBox="0 0 400 400" className="wheel-svg">
+
                 {themes.map((theme, index) => {
                   const angle = (360 / themes.length) * index
                   const nextAngle = (360 / themes.length) * (index + 1)
+
                   const startAngle = angle - 90
                   const endAngle = nextAngle - 90
-                  
-                  const x1 = 200 + 190 * Math.cos((startAngle * Math.PI) / 180)
-                  const y1 = 200 + 190 * Math.sin((startAngle * Math.PI) / 180)
-                  const x2 = 200 + 190 * Math.cos((endAngle * Math.PI) / 180)
-                  const y2 = 200 + 190 * Math.sin((endAngle * Math.PI) / 180)
-                  
-                  const textAngle = angle - 90 + (360 / themes.length) / 2
-                  const textX = 200 + 145 * Math.cos((textAngle * Math.PI) / 180)
-                  const textY = 200 + 145 * Math.sin((textAngle * Math.PI) / 180)
-                  
-                  const iconUrl = iconMap[index as keyof typeof iconMap]
-                  
+
+                  const x1 =
+                    200 + 190 * Math.cos((startAngle * Math.PI) / 180)
+
+                  const y1 =
+                    200 + 190 * Math.sin((startAngle * Math.PI) / 180)
+
+                  const x2 =
+                    200 + 190 * Math.cos((endAngle * Math.PI) / 180)
+
+                  const y2 =
+                    200 + 190 * Math.sin((endAngle * Math.PI) / 180)
+
+                  const textAngle =
+                    angle - 90 + (360 / themes.length) / 2
+
+                  const textX =
+                    200 + 145 * Math.cos((textAngle * Math.PI) / 180)
+
+                  const textY =
+                    200 + 145 * Math.sin((textAngle * Math.PI) / 180)
+
+                  const iconUrl =
+                    iconMap[index as keyof typeof iconMap]
+
                   return (
                     <g key={theme.name}>
                       <path
                         d={`M 200 200 L ${x1} ${y1} A 190 190 0 0 1 ${x2} ${y2} Z`}
                         fill={theme.color}
-                        stroke="white"
-                        strokeWidth="3"
+                        fillOpacity="0.48"
+                        stroke="rgba(255,255,255,0.10)"
+                        strokeWidth="0.8"
                       />
                       <image
                         href={iconUrl}
-                        x={textX - 20}
-                        y={textY - 20}
-                        width="40"
-                        height="40"
-                        transform={`rotate(${textAngle + 90}, ${textX}, ${textY})`}
-                        style={{ filter: 'drop-shadow(2px 2px 3px rgba(0,0,0,0.6))' }}
+                        x={textX - 29}
+                        y={textY - 29}
+                        width="58"
+                        height="58"
+                        style={{
+                          filter: 'drop-shadow(2px 3px 4px rgba(0,0,0,0.35))'
+                        }}
                       />
                     </g>
                   )
                 })}
+
+                {/* Central circle with GIRAR text */}
+                <circle
+                  cx="200"
+                  cy="200"
+                  r="55"
+                  fill="white"
+                  stroke="rgba(0,0,0,0.1)"
+                  strokeWidth="2"
+                />
+                <text
+                  x="200"
+                  y="200"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontSize="18"
+                  fontWeight="bold"
+                  fill="#FFB643"
+                  style={{
+                    textShadow: '1px 1px 2px rgba(0,0,0,0.2)'
+                  }}
+                >
+                  GIRAR
+                </text>
+
               </svg>
+
             </motion.div>
+
             <div className="wheel-pointer">▼</div>
+
           </div>
 
-          <motion.button
+          {/* BOTÓN DE GIRO AUTOMÁTICO */}
+          {/* <motion.button
             className="spin-button"
             onClick={() => spinWheel()}
             disabled={isSpinning || spinCount >= 3}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            {isSpinning ? '🎰 GIRANDO...' : spinCount >= 3 ? '¡COMPLETADO!' : '🎲 GIRAR RULETA'}
+            {isSpinning
+              ? '🎰 GIRANDO...'
+              : spinCount >= 3
+                ? '¡COMPLETADO!'
+                : '🎲 GIRAR RULETA'}
           </motion.button>
-
+ */}
           <div className="score-display">
+
             <p>Puntuación: {score}/3</p>
-            {spinCount > 0 && <button onClick={resetGame} className="reset-button">Reiniciar</button>}
+
+            {spinCount > 0 && (
+              <button
+                onClick={resetGame}
+                className="reset-button"
+              >
+                Reiniciar
+              </button>
+            )}
+
           </div>
+
         </div>
       </div>
 
+      {/* PANTALLA DE PREGUNTAS */}
       {selectedTheme && !gameComplete && (
+
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           className="questions-container"
         >
+
           <div
             className="theme-header"
             style={{ backgroundColor: selectedTheme.color }}
           >
+
             <h2>{selectedTheme.name}</h2>
+
             <p>Pregunta {spinCount} de 3</p>
+
           </div>
 
           <div className="question-card">
-            <h3>{selectedTheme.questions[currentQuestionIndex].question}</h3>
+
+            <h3>
+              {selectedTheme.questions[currentQuestionIndex].question}
+            </h3>
 
             <div className="options">
-              {selectedTheme.questions[currentQuestionIndex].options.map((option, index) => (
-                <motion.button
-                  key={index}
-                  className={`option-button ${
-                    showResult
-                      ? index === selectedTheme.questions[currentQuestionIndex].correct
-                        ? 'correct'
+
+              {selectedTheme.questions[currentQuestionIndex].options.map(
+                (option, index) => (
+
+                  <motion.button
+                    key={index}
+
+                    className={`option-button ${
+                      showResult
+                        ? index === selectedTheme.questions[currentQuestionIndex].correct
+                          ? 'correct'
+                          : selectedAnswer === index
+                            ? 'incorrect'
+                            : ''
                         : selectedAnswer === index
-                        ? 'incorrect'
-                        : ''
-                      : selectedAnswer === index
-                      ? 'selected'
-                      : ''
-                  }`}
-                  onClick={() => handleAnswer(index)}
-                  disabled={showResult}
-                  whileHover={{ scale: showResult ? 1 : 1.02 }}
-                  whileTap={{ scale: showResult ? 1 : 0.98 }}
-                >
-                  {String.fromCharCode(65 + index)}) {option}
-                  {showResult && index === selectedTheme.questions[currentQuestionIndex].correct && ' ✓'}
-                  {showResult && selectedAnswer === index && index !== selectedTheme.questions[currentQuestionIndex].correct && ' ✗'}
-                </motion.button>
-              ))}
+                          ? 'selected'
+                          : ''
+                    }`}
+
+                    onClick={() => handleAnswer(index)}
+                    disabled={showResult}
+                    whileHover={{ scale: showResult ? 1 : 1.02 }}
+                    whileTap={{ scale: showResult ? 1 : 0.98 }}
+                  >
+
+                    {String.fromCharCode(65 + index)}) {option}
+
+                    {showResult &&
+                      index === selectedTheme.questions[currentQuestionIndex].correct &&
+                      ' ✓'}
+
+                    {showResult &&
+                      selectedAnswer === index &&
+                      index !== selectedTheme.questions[currentQuestionIndex].correct &&
+                      ' ✗'}
+
+                  </motion.button>
+
+                )
+              )}
+
             </div>
 
             {showResult && (
+
               <motion.button
                 className="next-button"
                 onClick={nextQuestion}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                {spinCount < 3 ? 'Volver a la Ruleta' : 'Ver Resultados'}
+
+                {spinCount < 3
+                  ? 'Volver a la Ruleta'
+                  : 'Ver Resultados'}
+
               </motion.button>
+
             )}
+
           </div>
+
         </motion.div>
+
       )}
 
+      {/* RESULTADOS FINALES */}
       {gameComplete && (
+
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="results-container"
         >
+
           <div className="results-card">
+
             <h2>🎉 ¡Juego Completado!</h2>
-            <p className="final-score">Tu puntuación final: {score}/3</p>
+
+            <p className="final-score">
+              Tu puntuación final: {score}/3
+            </p>
+
             <div className="score-message">
-              {score === 3 && <p>¡Excelente! Eres un experto en San Juan 🏆</p>}
-              {score === 2 && <p>¡Muy bien! Conoces mucho sobre San Juan 👏</p>}
-              {score === 1 && <p>¡Bien! Sigue aprendiendo sobre San Juan 📚</p>}
-              {score === 0 && <p>¡No te rindas! Inténtalo de nuevo 💪</p>}
+
+              {score === 3 && (
+                <p>¡Excelente! Eres un experto en San Juan 🏆</p>
+              )}
+
+              {score === 2 && (
+                <p>¡Muy bien! Conoces mucho sobre San Juan 👏</p>
+              )}
+
+              {score === 1 && (
+                <p>¡Bien! Sigue aprendiendo sobre San Juan 📚</p>
+              )}
+
+              {score === 0 && (
+                <p>¡No te rindas! Inténtalo de nuevo 💪</p>
+              )}
+
             </div>
+
             <motion.button
               className="next-button"
               onClick={resetGame}
@@ -457,9 +763,13 @@ function App() {
             >
               Jugar de Nuevo
             </motion.button>
+
           </div>
+
         </motion.div>
+
       )}
+
     </div>
   )
 }
