@@ -13,10 +13,19 @@ html {
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: url('./assets/dinosaurio.png') no-repeat center center fixed;
+
+  background:
+    linear-gradient(
+      rgba(0, 0, 0, 0.45),
+      rgba(0, 0, 0, 0.45)
+    ),
+    url('./assets/dinosaurio.png') no-repeat center center fixed;
+
   background-size: cover;
+
   min-height: 100vh;
   min-height: 100svh;
+
   overflow-x: hidden;
   margin: 0;
   padding: 0;
@@ -111,7 +120,7 @@ button {
 
   border: none !important;
   outline: none !important;
-  border-radius: 50%;
+  border-radius: 20%;
 
   background: transparent !important;
   box-shadow: none !important;
@@ -211,7 +220,7 @@ button {
   background: #FFB643;
 
   border: none;
-  border-radius: 50px;
+  border-radius: 20px;
 
   cursor: pointer;
 
@@ -240,7 +249,7 @@ button {
   padding: clamp(45px, 6vh, 80px)
            clamp(45px, 6vh, 80px);
 
-  border-radius: clamp(20px, 3vh, 30px);
+  border-radius: clamp(10px, 3vh, 15px);
 
   text-align: center;
 
@@ -267,7 +276,7 @@ button {
   font-weight: bold;
 
   border: none;
-  border-radius: 20px;
+  border-radius: 15px;
 
   cursor: pointer;
   transition: background 0.3s ease;
@@ -306,7 +315,7 @@ button {
 .theme-header {
   padding: clamp(25px, 5vh, 50px);
 
-  border-radius: clamp(10px, 2vh, 20px);
+  border-radius: clamp(5px, 2vh, 10px);
 
   text-align: center;
   color: black;
@@ -337,7 +346,7 @@ button {
 
   padding: clamp(30px, 5vh, 60px);
 
-  border-radius: clamp(15px, 3vh, 30px);
+  border-radius: clamp(10px, 3vh, 15px);
 
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
@@ -371,7 +380,7 @@ button {
 
   border: clamp(2px, 0.4vh, 4px) solid #e9ecef;
 
-  border-radius: clamp(8px, 1.5vh, 15px);
+  border-radius: clamp(5px, 1.5vh, 10px);
 
   cursor: pointer;
   transition: all 0.3s ease;
@@ -419,7 +428,7 @@ button {
   background: #FFB643;
 
   border: none;
-  border-radius: 30px;
+  border-radius: 15px;
 
   cursor: pointer;
 
@@ -452,7 +461,7 @@ button {
 
   padding: clamp(30px, 6vh, 60px);
 
-  border-radius: clamp(20px, 4vh, 40px);
+  border-radius: clamp(10px, 4vh, 15px);
 
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 
