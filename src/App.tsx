@@ -1,6 +1,7 @@
 
 import { useState, useRef } from 'react'
 import { motion, useMotionValue, animate } from 'framer-motion'
+import { RotateCcw } from 'lucide-react'
 import './App.css'
 
 import atractivosIcon from './assets/Atractivos.svg'
@@ -11,6 +12,10 @@ import reciclarIcon from './assets/Reciclar.svg'
 import triasicoIcon from './assets/Triasico.svg'
 import subtractIcon from './assets/Group 395.svg'
 import botonGirarIcon from './assets/Vector.png'
+import fondoGanadorPerdedor from './assets/FondoGanador-Perdedor.png'
+import qrSitioWeb from './assets/QRSitioWeb.png'
+import qrRedesIntendente from './assets/RedesIntendente.png'
+import qrRedesMuni from './assets/RedesMuni.png'
 
 interface Question {
   question: string
@@ -220,6 +225,9 @@ function App() {
   const [spinCount, setSpinCount] = useState(0)
   const [gameComplete, setGameComplete] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
+  const [wrongAnswers, setWrongAnswers] = useState(0)
+  const [showGameOver, setShowGameOver] = useState(false)
+  const [showVictory, setShowVictory] = useState(false)
 
   const wheelRef = useRef<HTMLDivElement>(null)
 
@@ -243,11 +251,24 @@ function App() {
       selectedTheme!.questions[currentQuestionIndex].correct
     ) {
       setScore(prev => prev + 1)
+    } else {
+      setWrongAnswers(prev => prev + 1)
     }
   }
 
   // Volver a la ruleta después de responder
   const nextQuestion = () => {
+    if (wrongAnswers >= 1) {
+      setShowGameOver(true)
+      return
+    }
+
+    // Si acertó las 3 preguntas, mostrar mensaje de victoria
+    if (score === 3) {
+      setShowVictory(true)
+      return
+    }
+
     setSelectedTheme(null)
     setCurrentQuestionIndex(0)
     setSelectedAnswer(null)
@@ -274,6 +295,9 @@ function App() {
     setSpinCount(0)
     setGameComplete(false)
     setIsSpinning(false)
+    setWrongAnswers(0)
+    setShowGameOver(false)
+    setShowVictory(false)
   }
 
   // Comienza el movimiento manual con el dedo
@@ -526,6 +550,14 @@ function App() {
                 : '🎲 GIRAR RULETA'}
           </motion.button>
  */}
+          <button
+            onClick={resetGame}
+            className="back-button"
+          >
+            <RotateCcw size={24} />
+            Volver a empezar
+          </button>
+
           <div className="subtract-icon-container">
             <img src={subtractIcon} alt="Subtract" />
           </div>
@@ -637,7 +669,7 @@ function App() {
 
           <div className="results-card">
 
-            <h2>🎉 ¡Juego Completado!</h2>
+            {/* <h2>🎉 ¡Juego Completado!</h2>
 
             <p className="final-score">
               Tu puntuación final: {score}/3
@@ -661,7 +693,7 @@ function App() {
                 <p>¡No te rindas! Inténtalo de nuevo 💪</p>
               )}
 
-            </div>
+            </div> */}
 
             <motion.button
               className="next-button"
@@ -672,6 +704,108 @@ function App() {
               Jugar de Nuevo
             </motion.button>
 
+          </div>
+
+        </motion.div>
+
+      )}
+
+      {/* PANTALLA DE GAME OVER */}
+      {showGameOver && (
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="game-over-overlay"
+          style={{ backgroundImage: `url(${fondoGanadorPerdedor})` }}
+        >
+
+          <div className="game-over-content">
+            <h1>Se acabaron todos tus intentos</h1>
+            <p>Gracias por participar</p>
+          </div>
+
+          <div className="qr-button-container">
+            <div className="qr-row">
+              <div className="qr-section">
+                <div className="qr-horizontal">
+                  <img src={qrRedesIntendente} alt="QR Redes Intendente" />
+                  <img src={qrRedesMuni} alt="QR Redes Muni" />
+                </div>
+                <div className="qr-text">
+                  <p>Seguinos en nuestras redes</p>
+                </div>
+              </div>
+              <div className="qr-divider"></div>
+              <div className="qr-section">
+                <div className="qr-horizontal">
+                  <img src={qrSitioWeb} alt="QR Sitio Web" />
+                </div>
+                <div className="qr-text">
+                  <p>Visita nuestra página web</p>
+                </div>
+              </div>
+            </div>
+
+            <motion.button
+              className="victory-button"
+              onClick={resetGame}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Volver a intentar
+            </motion.button>
+          </div>
+
+        </motion.div>
+
+      )}
+
+      {/* PANTALLA DE VICTORIA */}
+      {showVictory && (
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="victory-overlay"
+          style={{ backgroundImage: `url(${fondoGanadorPerdedor})` }}
+        >
+
+          <div className="victory-content">
+            <h1>¡Felicidades</h1>
+            <h2>Ganaste!</h2>
+          </div>
+
+          <div className="qr-button-container">
+            <div className="qr-row">
+              <div className="qr-section">
+                <div className="qr-horizontal">
+                  <img src={qrRedesIntendente} alt="QR Redes Intendente" />
+                  <img src={qrRedesMuni} alt="QR Redes Muni" />
+                </div>
+                <div className="qr-text">
+                  <p>Seguinos en nuestras redes</p>
+                </div>
+              </div>
+              <div className="qr-divider"></div>
+              <div className="qr-section">
+                <div className="qr-horizontal">
+                  <img src={qrSitioWeb} alt="QR Sitio Web" />
+                </div>
+                <div className="qr-text">
+                  <p>Visita nuestra página web</p>
+                </div>
+              </div>
+            </div>
+
+            <motion.button
+              className="victory-button"
+              onClick={resetGame}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Jugar de Nuevo
+            </motion.button>
           </div>
 
         </motion.div>
