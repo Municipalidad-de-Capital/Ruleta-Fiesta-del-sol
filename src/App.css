@@ -563,9 +563,16 @@ button {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: clamp(60px, 8vh, 100px) 0 clamp(30px, 4vh, 50px) 0;
 
   z-index: 1000;
+}
+
+.game-over-text-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .qr-button-container {
@@ -578,7 +585,6 @@ button {
 .game-over-content {
   text-align: center;
   color: white;
-  margin-bottom: clamp(30px, 4vh, 50px);
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
 }
 
@@ -666,15 +672,21 @@ button {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: clamp(40px, 6vh, 80px) 0 clamp(30px, 4vh, 50px) 0;
 
   z-index: 1000;
+}
+
+.victory-text-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .victory-content {
   text-align: center;
   color: white;
-  margin-bottom: clamp(30px, 4vh, 50px);
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
 }
 
@@ -980,10 +992,6 @@ button {
 
   .game-over-content p {
     font-size: clamp(2.5rem, 5vh, 4rem);
-  }
-
-  .game-over-overlay {
-    padding-top: clamp(200px, 15vh, 300px);
   }
 
   .victory-content h1 {

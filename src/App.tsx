@@ -720,9 +720,11 @@ function App() {
           style={{ backgroundImage: `url(${fondoGanadorPerdedor})` }}
         >
 
-          <div className="game-over-content">
-            <h1>Se acabaron todos tus intentos</h1>
-            <p>Gracias por participar</p>
+          <div className="game-over-text-container">
+            <div className="game-over-content">
+              <h1>Se acabaron todos tus intentos</h1>
+              <p>Gracias por participar</p>
+            </div>
           </div>
 
           <div className="qr-button-container">
@@ -772,9 +774,11 @@ function App() {
           style={{ backgroundImage: `url(${fondoGanadorPerdedor})` }}
         >
 
-          <div className="victory-content">
-            <h1>¡Felicidades</h1>
-            <h2>Ganaste!</h2>
+          <div className="victory-text-container">
+            <div className="victory-content">
+              <h1>¡Felicidades</h1>
+              <h2>Ganaste!</h2>
+            </div>
           </div>
 
           <div className="qr-button-container">
