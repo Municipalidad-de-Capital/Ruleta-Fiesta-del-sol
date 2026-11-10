@@ -263,8 +263,8 @@ function App() {
       return
     }
 
-    // Si acertó las 3 preguntas, mostrar mensaje de victoria
-    if (score === 3) {
+    // Si acertó la única pregunta, mostrar mensaje de victoria
+    if (score === 1) {
       setShowVictory(true)
       return
     }
@@ -274,7 +274,7 @@ function App() {
     setSelectedAnswer(null)
     setShowResult(false)
 
-    if (spinCount >= 3) {
+    if (spinCount >= 1) {
       setGameComplete(true)
     }
   }
@@ -302,7 +302,7 @@ function App() {
 
   // Comienza el movimiento manual con el dedo
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (isSpinning || spinCount >= 3) return
+    if (isSpinning || spinCount >= 1) return
 
     e.preventDefault()
 
@@ -435,7 +435,7 @@ function App() {
         {/*<p>¡Gira la ruleta y descubre San Juan!</p> */}
 
         <div className="spin-counter">
-          <span>Tirada {Math.min(spinCount + 1, 3)} de 3</span>
+          <span>Tirada {Math.min(spinCount + 1, 1)} de 1</span>
         </div>
       </header>
 
@@ -554,7 +554,7 @@ function App() {
             onClick={resetGame}
             className="back-button"
           >
-            <RotateCcw size={24} />
+            <RotateCcw size={36} />
             Volver a empezar
           </button>
 
@@ -581,7 +581,7 @@ function App() {
 
             <h2>{selectedTheme.name}</h2>
 
-            <p>Pregunta {spinCount} de 3</p>
+            <p>Pregunta {spinCount} de 1</p>
 
           </div>
 
@@ -644,7 +644,7 @@ function App() {
                 animate={{ opacity: 1, y: 0 }}
               >
 
-                {spinCount < 3
+                {spinCount < 1
                   ? 'Volver a la Ruleta'
                   : 'Ver Resultados'}
 
@@ -753,7 +753,7 @@ function App() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <RotateCcw size={24} />
+              <RotateCcw size={36} />
               Volver a empezar
             </motion.button>
           </div>
@@ -805,7 +805,7 @@ function App() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <RotateCcw size={24} />
+              <RotateCcw size={36} />
               Volver a empezar
             </motion.button>
           </div>
