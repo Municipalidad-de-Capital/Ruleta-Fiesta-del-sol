@@ -30,14 +30,16 @@ interface Theme {
   questions: Question[]
 }
 
+
 const iconMap = {
-  4: atractivosIcon,
-  5: curiosidadesIcon,
-  0: culturaIcon,
-  1: gastronomiaIcon,
-  2: triasicoIcon,
-  3: reciclarIcon
+  0: atractivosIcon,
+  1: curiosidadesIcon,
+  2: culturaIcon,
+  3: gastronomiaIcon,
+  4: triasicoIcon,
+  5: reciclarIcon
 }
+
 
 const themes: Theme[] = [
   {
@@ -376,6 +378,7 @@ function App() {
     wheelRotation.set(drag.rotation)
   }
 
+ 
   // Finalizar el movimiento cuando se levanta el dedo
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     const drag = dragState.current
@@ -390,30 +393,33 @@ function App() {
       e.currentTarget.releasePointerCapture(e.pointerId)
     }
 
-    // Calcular el ángulo final y agregar inercia con varias vueltas
     const currentRotation = wheelRotation.get()
-    const normalizedRotation = ((currentRotation % 360) + 360) % 360
-
-    // Determinar qué segmento quedó seleccionado
-    // El offset de 60 grados compensa el -90 + 30 usado al dibujar los segmentos
     const segmentAngle = 360 / themes.length
-    const selectedIndex = Math.floor(((360 - normalizedRotation + 60 + segmentAngle / 2) % 360) / segmentAngle)
 
-    // Agregar 4 vueltas completas (1440°) para efecto de inercia
-    const targetRotation = currentRotation + 1440
+    // Elegir aleatoriamente el tema ganador
+    const selectedIndex = Math.floor(Math.random() * themes.length)
+
+    // Calcular el ángulo para detenerse en el centro del segmento elegido
+    // Calcular el ángulo para detener el centro del segmento elegido
+    // justo debajo del indicador superior de la ruleta.
+    const targetAngle =
+    360 - (selectedIndex * segmentAngle - segmentAngle / 2) - 90
+
+    const normalizedTarget = ((targetAngle % 360) + 360) % 360
+const currentNormalized = ((currentRotation % 360) + 360) % 360
+const delta = (normalizedTarget - currentNormalized + 360) % 360
+
+    // Agregar cuatro vueltas completas y llegar al segmento aleatorio
+    const targetRotation = currentRotation + 1440 + delta
 
     setIsSpinning(true)
     setShowResult(false)
     setSelectedAnswer(null)
 
-    animate(
-      wheelRotation,
-      targetRotation,
-      {
-        duration: 4,
-        ease: 'easeOut'
-      }
-    )
+    animate(wheelRotation, targetRotation, {
+      duration: 4,
+      ease: 'easeOut'
+    })
 
     setTimeout(() => {
       setSelectedTheme(themes[selectedIndex])
@@ -427,6 +433,7 @@ function App() {
       setSpinCount(prev => prev + 1)
     }, 4000)
   }
+
 
   return (
     <div className="app">
