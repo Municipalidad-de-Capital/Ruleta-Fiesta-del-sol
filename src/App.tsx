@@ -559,7 +559,7 @@ function App() {
             onClick={resetGame}
             className="back-button"
           >
-            <RotateCcw size={42} />
+            <RotateCcw size={60} />
             Volver a empezar
           </button>
 
@@ -761,7 +761,7 @@ function App() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <RotateCcw size={36} />
+              <RotateCcw size={60} />
               Volver a empezar
             </motion.button>
           </div>
@@ -815,7 +815,7 @@ function App() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <RotateCcw size={36} />
+              <RotateCcw size={60} />
               Volver a empezar
             </motion.button>
           </div>
