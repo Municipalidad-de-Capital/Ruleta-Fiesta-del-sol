@@ -554,7 +554,7 @@ function App() {
             onClick={resetGame}
             className="back-button"
           >
-            <RotateCcw size={36} />
+            <RotateCcw size={42} />
             Volver a empezar
           </button>
 
@@ -722,7 +722,8 @@ function App() {
 
           <div className="game-over-text-container">
             <div className="game-over-content">
-              <h1>Se acabaron todos tus intentos</h1>
+              <h1>¡Se acabaron </h1>
+              <h1>todos tus intentos!</h1>
               <p>Gracias por participar</p>
             </div>
           </div>
