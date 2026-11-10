@@ -31,12 +31,12 @@ interface Theme {
 }
 
 const iconMap = {
-  0: atractivosIcon,
-  1: curiosidadesIcon,
-  2: culturaIcon,
-  3: gastronomiaIcon,
-  4: triasicoIcon,
-  5: reciclarIcon
+  4: atractivosIcon,
+  5: curiosidadesIcon,
+  0: culturaIcon,
+  1: gastronomiaIcon,
+  2: triasicoIcon,
+  3: reciclarIcon
 }
 
 const themes: Theme[] = [
@@ -395,8 +395,9 @@ function App() {
     const normalizedRotation = ((currentRotation % 360) + 360) % 360
 
     // Determinar qué segmento quedó seleccionado
+    // El offset de 60 grados compensa el -90 + 30 usado al dibujar los segmentos
     const segmentAngle = 360 / themes.length
-    const selectedIndex = Math.floor(((360 - normalizedRotation + segmentAngle / 2) % 360) / segmentAngle)
+    const selectedIndex = Math.floor(((360 - normalizedRotation + 60 + segmentAngle / 2) % 360) / segmentAngle)
 
     // Agregar 4 vueltas completas (1440°) para efecto de inercia
     const targetRotation = currentRotation + 1440
@@ -476,8 +477,8 @@ function App() {
                   const angle = (360 / themes.length) * index
                   const nextAngle = (360 / themes.length) * (index + 1)
 
-                  const startAngle = angle - 90
-                  const endAngle = nextAngle - 90
+                  const startAngle = angle - 90 + 30
+                  const endAngle = nextAngle - 90 + 30
 
                   const x1 =
                     200 + 190 * Math.cos((startAngle * Math.PI) / 180)
@@ -492,7 +493,7 @@ function App() {
                     200 + 190 * Math.sin((endAngle * Math.PI) / 180)
 
                   const textAngle =
-                    angle - 90 + (360 / themes.length) / 2
+                    angle - 90 + (360 / themes.length) / 2 + 30
 
                   const textX =
                     200 + 145 * Math.cos((textAngle * Math.PI) / 180)
@@ -502,6 +503,16 @@ function App() {
 
                   const iconUrl =
                     iconMap[index as keyof typeof iconMap]
+
+                  // Calcular el punto medio del arco del segmento
+                  const midArcAngle = (startAngle + endAngle) / 2
+                  const midArcX = 200 + 190 * Math.cos((midArcAngle * Math.PI) / 180)
+                  const midArcY = 200 + 190 * Math.sin((midArcAngle * Math.PI) / 180)
+
+                  // Calcular el ángulo desde el icono hacia el punto medio del arco
+                  const angleToMidArc = Math.atan2(midArcY - textY, midArcX - textX) * (180 / Math.PI)
+                  // Ajustar porque el icono originalmente apunta hacia arriba
+                  const iconRotation = angleToMidArc + 90
 
                   return (
                     <g key={theme.name}>
@@ -518,6 +529,7 @@ function App() {
                         y={textY - 29}
                         width="58"
                         height="58"
+                        transform={`rotate(${iconRotation}, ${textX}, ${textY})`}
                         style={{
                           filter: 'drop-shadow(2px 3px 4px rgba(0,0,0,0.35))'
                         }}
