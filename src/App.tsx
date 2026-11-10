@@ -10,7 +10,8 @@ import curiosidadesIcon from './assets/Curiosidades.svg'
 import gastronomiaIcon from './assets/Gastronomia.svg'
 import reciclarIcon from './assets/Reciclar.svg'
 import triasicoIcon from './assets/Triasico.svg'
-import subtractIcon from './assets/Group 395.svg'
+import groupActIcon from './assets/Group 395.svg'
+import subtractIcon from './assets/Subtract.svg'
 import botonGirarIcon from './assets/Vector.png'
 import fondoGanadorPerdedor from './assets/FondoGanador-Perdedor.png'
 import qrSitioWeb from './assets/QRSitioWeb.png'
@@ -429,6 +430,10 @@ function App() {
   return (
     <div className="app">
 
+      <div className="subtract-top-left">
+        <img src={subtractIcon} alt="Subtract" />
+      </div>
+
       <header className="header">
          <h1> ¡Juguemos!</h1>
 
@@ -559,7 +564,7 @@ function App() {
           </button>
 
           <div className="subtract-icon-container">
-            <img src={subtractIcon} alt="Subtract" />
+            <img src={groupActIcon} alt="Group Act" />
           </div>
 
         </div>

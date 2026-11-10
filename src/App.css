@@ -50,6 +50,19 @@ button {
   width: 100%;
   max-width: 100%;
   gap: clamp(15px, 2vh, 25px);
+  position: relative;
+}
+
+.subtract-top-left {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.subtract-top-left img {
+  width: clamp(800px, 30vh, 800px);
+  height: auto;
 }
 
 /* =================================
