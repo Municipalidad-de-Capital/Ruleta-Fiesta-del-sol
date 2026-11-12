@@ -73,6 +73,46 @@ button {
 }
 
 /* =================================
+   CONTENEDOR DEL CONTADOR
+================================= */
+
+.counter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(3px, 0.5vh, 6px);
+
+  background: white;
+  padding: clamp(5px, 1vh, 10px) clamp(4px, 0.8vh, 8px);
+
+  border-radius: clamp(6px, 1vh, 10px);
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+  margin: clamp(10px, 2vh, 20px) auto;
+}
+
+.counter-current {
+  font-size: clamp(1.5rem, 3vh, 2.5rem);
+  font-weight: bold;
+  color: black;
+  font-family: 'Archivo', sans-serif;
+}
+
+.counter-separator {
+  width: clamp(2px, 0.4vh, 4px);
+  height: clamp(15px, 2.5vh, 30px);
+  background: black;
+  border-radius: 2px;
+}
+
+.counter-total {
+  font-size: clamp(1.5rem, 3vh, 2.5rem);
+  font-weight: bold;
+  color: black;
+  font-family: 'Archivo', sans-serif;
+}
+
+/* =================================
    ENCABEZADO
 ================================= */
 
@@ -85,9 +125,9 @@ button {
 }
 
 .header h1 {
-  font-size: clamp(10rem, 8vh, 10rem);
+  font-size: clamp(16rem, 10vh, 18rem);
   margin-bottom: 145px;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .header p {
@@ -633,14 +673,14 @@ button {
 }
 
 .game-over-content h1 {
-  font-size: clamp(3.5rem, 7vh, 6rem);
+  font-size: clamp(5rem, 9vh, 8rem);
   font-weight: 700;
-  margin-bottom: clamp(50px, 6vh, 80px);
+  margin-bottom: clamp(80px, 10vh, 120px);
   font-family: 'Archivo', sans-serif;
 }
 
 .game-over-content p {
-  font-size: clamp(1.5rem, 3vh, 2.2rem);
+  font-size: clamp(2.5rem, 4vh, 3.5rem);
   font-weight: 600;
   margin: 0;
   font-family: 'Archivo', sans-serif;
@@ -735,15 +775,15 @@ button {
 }
 
 .victory-content h1 {
-  font-size: clamp(3rem, 6vh, 5rem);
+  font-size: clamp(8rem, 10vh, 10rem);
   font-weight: 700;
-  margin-bottom: clamp(10px, 2vh, 15px);
+  margin-bottom: clamp(30px, 5vh, 50px);
   font-family: 'Archivo', sans-serif;
 }
 
 .victory-content h2 {
-  font-size: clamp(4rem, 8vh, 7rem);
-  font-weight: 900;
+  font-size: clamp(8rem, 10vh, 10rem);
+  font-weight: 700;
   margin: 0;
   font-family: 'Archivo', sans-serif;
 }
@@ -826,7 +866,7 @@ button {
   }
 
   .header h1 {
-    font-size: clamp(3rem, 8vw, 4rem);
+    font-size: clamp(4rem, 10vw, 5rem);
   }
 
   .header p {
@@ -874,7 +914,7 @@ button {
   }
 
   .header h1 {
-    font-size: 2.5rem;
+    font-size: 4.5rem;
   }
 
   .header p {
@@ -919,7 +959,7 @@ button {
   }
 
   .header h1 {
-    font-size: clamp(5rem, 7vh, 6rem);
+    font-size: clamp(6rem, 9vh, 7rem);
   }
 
   .spin-button {
@@ -956,7 +996,7 @@ button {
   }
 
   .header h1 {
-    font-size: clamp(8rem, 12vh, 10rem);
+    font-size: clamp(12rem, 16vh, 14rem);
   }
 
   .score-display {
@@ -1035,19 +1075,19 @@ button {
   }
 
   .game-over-content h1 {
-    font-size: clamp(5rem, 10vh, 8rem);
+    font-size: clamp(7rem, 12vh, 10rem);
   }
 
   .game-over-content p {
-    font-size: clamp(2.5rem, 5vh, 4rem);
+    font-size: clamp(4rem, 6vh, 5rem);
   }
 
   .victory-content h1 {
-    font-size: clamp(5rem, 10vh, 8rem);
+    font-size: clamp(8rem, 14vh, 12rem);
   }
 
   .victory-content h2 {
-    font-size: clamp(6rem, 12vh, 10rem);
+    font-size: clamp(8rem, 14vh, 12rem);
   }
 
   .qr-item img {

@@ -447,9 +447,11 @@ const delta = (normalizedTarget - currentNormalized + 360) % 360
 
         {/*<p>¡Gira la ruleta y descubre San Juan!</p> */}
 
-        <div className="spin-counter">
-          <span>Tirada {Math.min(spinCount + 1, 1)} de 1</span>
-        </div>
+        {/* <div className="counter-badge">
+          <span className="counter-current">{String(spinCount + 1).padStart(2, '0')}</span>
+          <span className="counter-separator"></span>
+          <span className="counter-total">01</span>
+        </div> */}
       </header>
 
       {/* RUleta */}
@@ -574,14 +576,6 @@ const delta = (normalizedTarget - currentNormalized + 360) % 360
                 : '🎲 GIRAR RULETA'}
           </motion.button>
  */}
-          <button
-            onClick={resetGame}
-            className="back-button"
-          >
-            <RotateCcw size={60} />
-            Volver a empezar
-          </button>
-
           <div className="subtract-icon-container">
             <img src={groupActIcon} alt="Group Act" />
           </div>
@@ -676,6 +670,14 @@ const delta = (normalizedTarget - currentNormalized + 360) % 360
               </motion.button>
 
             )}
+
+            <button
+              onClick={resetGame}
+              className="back-button"
+            >
+              <RotateCcw size={60} />
+              Volver a empezar
+            </button>
 
           </div>
 
