@@ -436,7 +436,7 @@ const delta = (normalizedTarget - currentNormalized + 360) % 360
 
 
   return (
-    <div className="app">
+    <div className={`app ${selectedTheme ? 'questions-visible' : ''}`}>
 
       <div className="subtract-top-left">
         <img src={subtractIcon} alt="Subtract" />
@@ -590,12 +590,13 @@ const delta = (normalizedTarget - currentNormalized + 360) % 360
       </div>
 
       {/* PANTALLA DE PREGUNTAS */}
-      {selectedTheme && !gameComplete && (
+      {selectedTheme && !gameComplete && !showGameOver && !showVictory && (
 
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           className="questions-container"
+          style={{ width: '100vw', maxWidth: 'none' }}
         >
 
           <div
