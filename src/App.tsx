@@ -600,7 +600,7 @@ const delta = (normalizedTarget - currentNormalized + 360) % 360
 
             <h2>{selectedTheme.name}</h2>
 
-            <p>Pregunta {spinCount} de 1</p>
+            {/* <p>Pregunta {spinCount} de 1</p> */}
 
           </div>
 
